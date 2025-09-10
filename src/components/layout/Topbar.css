@@ -1,0 +1,38 @@
+/* src/components/layout/Topbar.css */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  padding: 10px 20px;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.topbar .menu-icon {
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #2c3e97;
+}
+
+.topbar .brand {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #2c3e97;
+}
+
+.topbar .user-dropdown .dropdown-toggle {
+  background: transparent;
+  border: none;
+  font-weight: 500;
+  color: #2c3e97;
+  box-shadow: none !important;
+}
+
+.topbar .user-dropdown .dropdown-menu {
+  border-radius: 8px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
+}

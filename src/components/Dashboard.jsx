@@ -75,8 +75,8 @@
 // src/components/Dashboard.jsx
 import { Outlet } from "react-router-dom";
 import { useState } from "react";
-import Sidebar from "./layout/Sidebar";
-import Topbar from "./layout/Topbar";
+import Sidebar from "./layout/sidebar.jsx";
+import Topbar from "./layout/Topbar.jsx";
 
 const Dashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);

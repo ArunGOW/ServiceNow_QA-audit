@@ -72,66 +72,26 @@
 // export default Dashboard;
 
 
-// // src/components/Dashboard.jsx
-// import { Outlet } from "react-router-dom";
-// import { useState } from "react";
-// import Sidebar from "./layout/Sidebar";
-// import Topbar from "./layout/Topbar";
-
-// const Dashboard = () => {
-//   const [sidebarOpen, setSidebarOpen] = useState(true);
-
-//   return (
-//     <div className="d-flex">
-//       {/* Sidebar */}
-//       {sidebarOpen && <Sidebar />}
-
-//       {/* Main Content */}
-//       <div className="flex-grow-1">
-//         <Topbar onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
-//         <div className="p-3">
-//           <Outlet /> {/* Child routes render here */}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Dashboard;
-
-// src/pages/Dashboard.jsx
-import { Outlet, Routes, Route, Navigate } from "react-router-dom";
-import Sidebar from "../components/layout/Sidebar";
-import Topbar from "../components/layout/Topbar";
-import PendingQA from "../pages/PendingQA";
-import CompletedQA from "../pages/CompletedQA";
-import Reports from "../pages/Reports";
+// src/components/Dashboard.jsx
+import { Outlet } from "react-router-dom";
 import { useState } from "react";
+import Sidebar from "./layout/sidebar.jsx";
+
+import Topbar from "./layout/Topbar.jsx";
 
 const Dashboard = () => {
-  const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
     <div className="d-flex">
       {/* Sidebar */}
-      <Sidebar isOpen={isSidebarOpen} />
+      {sidebarOpen && <Sidebar />}
 
-      {/* Main Content Area */}
+      {/* Main Content */}
       <div className="flex-grow-1">
-        <Topbar onToggleSidebar={() => setSidebarOpen(!isSidebarOpen)} />
-
+        <Topbar onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
         <div className="p-3">
-          <Routes>
-            {/* 👇 Default route redirects to Pending QA */}
-            <Route index element={<Navigate to="pending-qa" replace />} />
-
-           
-            {/* fallback if no match */}
-            <Route path="*" element={<PendingQA />} />
-          </Routes>
-
-          {/* Outlet is optional if you want nested children */}
-          <Outlet />
+          <Outlet /> {/* Child routes render here */}
         </div>
       </div>
     </div>

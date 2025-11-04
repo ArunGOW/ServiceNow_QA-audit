@@ -1,0 +1,86 @@
+ /* Bold styled checkbox */
+.custom-checkbox input[type="checkbox"] {
+  appearance: none; /* Remove default checkbox */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  width: 15px;
+  height: 15px;
+  border: 1px solid #000000; /* Bold border */
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Hover effect */
+.custom-checkbox input[type="checkbox"]:hover {
+  border-color: #0d6efd;
+}
+
+/* Checked state */
+.custom-checkbox input[type="checkbox"]:checked {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+
+ .info-field {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 10px;
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+.info-field span:first-child {
+  min-width: 140px; /* keeps labels aligned */
+  color: #222;
+}
+
+.info-field span:last-child {
+  flex: 1;
+  color: #333;
+}
+
+.description-field span:last-child {
+  white-space: pre-wrap; /* allow multiline wrapping */
+  max-width: 100%;
+}
+
+
+.mb-25{
+  margin-bottom: 24px;
+}
+ 
+
+/* Checkmark symbol */
+.custom-checkbox input[type="checkbox"]:checked::after {
+  
+  color: #fff;
+  font-size: 14px;
+  position: absolute;
+  top: 0;
+  left: 3px;
+}
+.short-desc-cell {
+  max-width: 250px; /* Limit width to prevent overflow */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.short-desc-text {
+  display: inline-block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 992px) {
+  .short-desc-cell {
+    max-width: 180px;
+  }
+}

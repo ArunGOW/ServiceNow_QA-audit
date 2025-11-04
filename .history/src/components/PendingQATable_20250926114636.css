@@ -1,0 +1,36 @@
+ /* Bold styled checkbox */
+.custom-checkbox input[type="checkbox"] {
+  appearance: none; /* Remove default checkbox */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  width: 20px;
+  height: 20px;
+  border: 1px solid #000000; /* Bold border */
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Hover effect */
+.custom-checkbox input[type="checkbox"]:hover {
+  border-color: #0d6efd;
+}
+
+/* Checked state */
+.custom-checkbox input[type="checkbox"]:checked {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+/* Checkmark symbol */
+.custom-checkbox input[type="checkbox"]:checked::after {
+  
+  color: #fff;
+  font-size: 14px;
+  position: absolute;
+  top: 0;
+  left: 3px;
+}

@@ -189,7 +189,7 @@ const PendingQATable = ({ incidents, loading, refresh }) => {
   return (
     <div className="bg-white rounded shadow-sm p-3">
       <ToastContainer position="top-right" autoClose={2500} hideProgressBar />
-      <div className="d-flex justify-content-between align-items-center mb-3">
+      <div className="d-flex justify-content-centre align-items-center mb-3">
         <h5 className="fw-bold">Pending QA</h5>
       </div>
 

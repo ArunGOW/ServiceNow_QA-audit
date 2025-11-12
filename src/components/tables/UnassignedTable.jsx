@@ -656,7 +656,11 @@ useEffect(() => {
 
       {/* Header */}
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h5 className="fw-bold">Unassigned Incidents</h5>
+        <div></div>
+        <div className="">
+<h5 className="fw-bold">Unassigned Incidents</h5>
+        </div>
+        
         <div className="d-flex gap-2">
           {/* <Form.Select
             size="sm"
@@ -670,10 +674,17 @@ useEffect(() => {
               </option>
             ))}
           </Form.Select> */}
-          <Form.Select
+         <Form.Select
   size="sm"
   value={selectedUser}
   onChange={(e) => setSelectedUser(e.target.value)}
+  className="shadow-sm border-primary fw-semibold text-secondary"
+  style={{
+    width: "220px",
+    borderRadius: "10px",
+    cursor: "pointer",
+    transition: "0.3s ease",
+  }}
 >
   <option value="">-- Select QA Admin --</option>
   {users.map((user) => (
@@ -682,6 +693,7 @@ useEffect(() => {
     </option>
   ))}
 </Form.Select>
+
 
 
           <Button
@@ -705,7 +717,7 @@ useEffect(() => {
               <th style={{ width: "65px" }}>
                 <Form.Check
                   type="checkbox"
-                  className="dark-border-checkbox"
+                  className="custom-checkbox"
                   checked={
                     localIncidents.length > 0 &&
                     selectedIncidents.length === localIncidents.length
@@ -727,7 +739,7 @@ useEffect(() => {
                   <td>
                     <Form.Check
                       type="checkbox"
-                      className="dark-border-checkbox"
+                      className="custom-checkbox"
                       checked={selectedIncidents.includes(incident.sid)}
                       onChange={() => handleSelectIncident(incident.sid)}
                     />

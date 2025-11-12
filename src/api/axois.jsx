@@ -1,12 +1,14 @@
  // src/api/axios.js
 import axios from "axios";
 
+ // src/api/axios.js
 const api = axios.create({
-  baseURL: "http://localhost:8000/api",
+  baseURL: "http://18.130.235.113:8010/api",
   headers: {
     "Content-Type": "application/json",
   },
 });
+
 
 // 🔑 Attach token automatically to every request
 api.interceptors.request.use(

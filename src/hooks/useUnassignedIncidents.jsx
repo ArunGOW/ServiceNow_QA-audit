@@ -19,7 +19,7 @@ const useUnassignedIncidents = (currentPage, limit = 10) => {
       setLoading(true);
       try {
         const res = await api.post(
-          "http://localhost:8000/api/users/get-unassigned/incidents/",
+          "/users/get-unassigned/incidents/",
           {
             user_sid: user.user_sid,
             page: currentPage,

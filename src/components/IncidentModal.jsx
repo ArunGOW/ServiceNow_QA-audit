@@ -28,7 +28,7 @@ const IncidentModal = ({ show, onHide, incident }) => {
       },
     ];
 
-    const response = await api.put("/api/incidents/update", payload);
+    const response = await api.put("/incidents/update", payload);
     console.log("✅ Response:", response.data);
     alert("Incident updated successfully!");
     onHide();

@@ -19,7 +19,7 @@ const useGroomingIncidents = (currentPage, limit = 10) => {
       setLoading(true);
       try {
         const res = await api.post(
-          "http://localhost:8000/api/users/user/grooming-needed",
+          "/users/user/grooming-needed",
           {
             user_sid: user.user_sid,
             page: currentPage,

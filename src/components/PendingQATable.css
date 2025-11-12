@@ -129,3 +129,16 @@
   font-weight: 600;
   padding: 8px 14px;
 }
+
+
+.dark-border-checkbox .form-check-input {
+  border: 2px solid #343a40; /* dark gray border */
+  width: 18px;               /* optional: slightly bigger */
+  height: 18px;              /* optional: slightly bigger */
+}
+
+
+.form-select:focus {
+  box-shadow: 0 0 6px rgba(13, 110, 253, 0.6); /* Bootstrap primary glow */
+  border-color: #0d6efd;
+}

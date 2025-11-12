@@ -25,7 +25,7 @@ const GroomingTable = ({ incidents, loading }) => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await api.get("http://localhost:8000/api/users/get/list_users");
+        const res = await api.get("/users/get/list_users");
         setUsers(res.data || []);
       } catch (error) {
         console.error("❌ Error fetching users:", error);
@@ -59,7 +59,7 @@ useEffect(() => {
   useEffect(() => {
     const fetchQualityPoints = async () => {
       try {
-        const res = await api.get("http://localhost:8000/api/users/quality-check-points");
+        const res = await api.get("/users/quality-check-points");
         const points = Array.isArray(res.data)
           ? res.data
           : res.data?.data || res.data?.results || [];
@@ -254,13 +254,14 @@ selectedComments.forEach((item) => {
     );
   };
 
-  const handleSelectAll = () => {
-    if (selectedIncidents.length === pendingIncidents.length) {
-      setSelectedIncidents([]);
-    } else {
-      setSelectedIncidents(pendingIncidents.map((i) => i.sid));
-    }
-  };
+ const handleSelectAll = () => {
+  if (selectedIncidents.length === incidents.length) {
+    setSelectedIncidents([]);
+  } else {
+    setSelectedIncidents(incidents.map((i) => i.sid));
+  }
+};
+
 
     // Assign incidents
   const handleAssign = async () => {
@@ -293,7 +294,7 @@ selectedComments.forEach((item) => {
 
   return (
     <div className="bg-white rounded shadow-sm p-3">
-      <div className="d-flex justify-content-between align-items-center mb-3">
+      <div className="d-flex justify-content-center align-items-center mb-3">
         <h5 className="fw-bold">Pending Grooming</h5>
 
         {/* ✅ Assignment Controls */}
@@ -332,17 +333,16 @@ selectedComments.forEach((item) => {
           <thead className="table-light">
             <tr>
                 <th style={{ width: "65px" }}> 
-                <Form.Check
-                  type="checkbox"
-                   className="custom-checkbox"
-                  checked={
-                    incidents.length > 0 &&
-                    selectedIncidents.length === incidents.length
-                  }
-                  onChange={handleSelectAll}
-                  
-                    
-                />
+                 <Form.Check
+  type="checkbox"
+  className="custom-checkbox"
+  checked={
+    incidents.length > 0 &&
+    selectedIncidents.length === incidents.length
+  }
+  onChange={handleSelectAll}
+/>
+
                 <span className="ms-1">Select All</span>
               </th>
               <th>Incident No</th>
@@ -379,7 +379,18 @@ selectedComments.forEach((item) => {
   </div>
 </td>
 
-                  <td>{incident.assigned_analyst || "NA"}</td>
+                  <td>
+  {incident.assigned_analyst
+    ? incident.assigned_analyst
+        .split(" ")
+        .map(
+          (word) =>
+            word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+        )
+        .join(" ")
+    : "N/A"}
+</td>
+
                   <td>{incident.incident_date || "NA"}</td>
                   <td>{incident.priority || "N/A"}</td>
                 </tr>
@@ -425,7 +436,13 @@ selectedComments.forEach((item) => {
              <Col md={4}>
                <div className="info-field">
                  <span className="fw-bold me-2">Handled By:</span>
-                 <span>{formData.assigned_analyst || "N/A"}</span>
+                 <span>
+  {formData.assigned_analyst
+    ? formData.assigned_analyst.charAt(0).toUpperCase() +
+      formData.assigned_analyst.slice(1).toLowerCase()
+    : "N/A"}
+</span>
+                  
                </div>
              </Col>
              <Col md={4}>

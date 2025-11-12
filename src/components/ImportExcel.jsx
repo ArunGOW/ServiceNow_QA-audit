@@ -30,7 +30,7 @@ const ImportExcel = () => {
       formData.append("file", file);
 
       const res = await axios.post(
-        `http://127.0.0.1:8000/api/users/import-incidents-from-excel?user_sid=${user.user_sid}`,
+        `/users/import-incidents-from-excel?user_sid=${user.user_sid}`,
         formData,
         {
           headers: {

@@ -72,7 +72,7 @@ const useProcessedIncidents = (currentPage, limit = 10) => {
       setLoading(true);
       try {
         const res = await api.post(
-          "http://localhost:8000/api/users/get-processed/incidents/",
+          "/users/get-processed/incidents/",
           {
             user_sid: user.user_sid,
             page: currentPage,

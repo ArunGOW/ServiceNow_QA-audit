@@ -1,7 +1,3 @@
- 
-
-
-//-----------------------------------------------------------------------------------------
 
 import { Table, Modal, Button, Form, Row, Col, Dropdown, Spinner } from "react-bootstrap";
 import { useState, useEffect } from "react";
@@ -28,46 +24,44 @@ const PendingQATable = ({ incidents, loading, refresh }) => {
   const [totalScore, setTotalScore] = useState(0);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-   useEffect(() => {
-  const fetchUsers = async () => {
-    try {
-      setLoadingUsers(true);
-      const res = await api.get("/users/get/list_users");
-
-      // If all users are agents:
-      const agents = res.data || [];
-
-      console.log("userlist", res.data);
-      setUsers(agents);
-    } catch (error) {
-      console.error("Error fetching users:", error.response?.data || error.message);
-      toast.error("Failed to load agents list!");
-    } finally {
-      setLoadingUsers(false);
-    }
-  };
-  fetchUsers();
-}, []);
-
-  
+  // Fetch users/agents
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        setLoadingUsers(true);
+        const res = await api.get("/users/get/list_users");
+        console.log("🧩 Agents API Response:", res.data);
+        setUsers(res.data || []);
+      } catch (error) {
+        console.error("❌ Error fetching users:", error.response?.data || error.message);
+        toast.error("Failed to load agents list!");
+      } finally {
+        setLoadingUsers(false);
+      }
+    };
+    fetchUsers();
+  }, []);
 
   // Fetch Quality Check Points
   useEffect(() => {
     const fetchQualityPoints = async () => {
       try {
-        const res = await api.get("http://localhost:8000/api/users/quality-check-points");
+        const res = await api.get("/users/quality-check-points");
+        console.log("🔍 Quality Check Points Response:", res.data);
+
         const points = Array.isArray(res.data)
           ? res.data
           : res.data?.data || res.data?.results || [];
         setQualityPoints(points);
       } catch (error) {
-        console.error("Error fetching quality points:", error.response?.data || error.message);
+        console.error("❌ Error fetching quality points:", error.response?.data || error.message);
         toast.error("Failed to load quality check points!");
       }
     };
     fetchQualityPoints();
   }, []);
 
+  // Toggle QA comments selection
   const handleCommentToggle = (comment) => {
     setSelectedComments((prev) => {
       let updated;
@@ -82,9 +76,9 @@ const PendingQATable = ({ incidents, loading, refresh }) => {
     });
   };
 
+  // Open modal and prefill data
   const handleOpenModal = (incident) => {
     setSelectedIncident(incident);
-
     setFormData({
       ...incident,
       incident_sid: incident.sid,
@@ -94,14 +88,9 @@ const PendingQATable = ({ incidents, loading, refresh }) => {
 
     if (incident.qa_comment) {
       const selectedNames = incident.qa_comment.split(", ").map((name) => name.trim());
-      const preSelected = qualityPoints.filter((qp) =>
-        selectedNames.includes(qp.check_point_name)
-      );
+      const preSelected = qualityPoints.filter((qp) => selectedNames.includes(qp.check_point_name));
       setSelectedComments(preSelected);
-      const scoreSum = preSelected.reduce(
-        (sum, item) => sum + (item.point_value || 0),
-        0
-      );
+      const scoreSum = preSelected.reduce((sum, item) => sum + (item.point_value || 0), 0);
       setTotalScore(scoreSum);
     } else {
       setSelectedComments([]);
@@ -111,6 +100,7 @@ const PendingQATable = ({ incidents, loading, refresh }) => {
     setShowModal(true);
   };
 
+  // Close modal and reset
   const handleCloseModal = () => {
     setShowModal(false);
     setSelectedIncident(null);
@@ -119,6 +109,7 @@ const PendingQATable = ({ incidents, loading, refresh }) => {
     setTotalScore(0);
   };
 
+  // Handle form field changes
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     let finalValue = value;
@@ -127,6 +118,7 @@ const PendingQATable = ({ incidents, loading, refresh }) => {
     setFormData((prev) => ({ ...prev, [name]: finalValue }));
   };
 
+  // Format date to YYYY-MM-DD
   const formatDate = (dateStr) => {
     if (!dateStr) return "";
     if (dateStr.includes("-")) return dateStr.split("T")[0];
@@ -137,6 +129,7 @@ const PendingQATable = ({ incidents, loading, refresh }) => {
     return date.toISOString().split("T")[0];
   };
 
+  // Update incident via API
   const handleUpdate = async () => {
     if (!formData?.incident_sid) return toast.warn("Incident SID missing!");
 
@@ -177,11 +170,12 @@ const PendingQATable = ({ incidents, loading, refresh }) => {
 
     try {
       const res = await api.post("/users/update/incident-status", payload);
+      console.log("✅ Update Incident Response:", res.data);
       toast.success(res.data.message || "Incident updated successfully");
       handleCloseModal();
       if (typeof refresh === "function") refresh();
     } catch (error) {
-      console.error("Error updating incident:", error);
+      console.error("❌ Error updating incident:", error.response?.data || error.message);
       toast.error("Failed to update incident");
     }
   };
@@ -189,7 +183,7 @@ const PendingQATable = ({ incidents, loading, refresh }) => {
   return (
     <div className="bg-white rounded shadow-sm p-3">
       <ToastContainer position="top-right" autoClose={2500} hideProgressBar />
-      <div className="d-flex justify-content-centre align-items-center mb-3">
+      <div className="d-flex justify-content-center align-items-center mb-3">
         <h5 className="fw-bold">Pending QA</h5>
       </div>
 
@@ -199,24 +193,18 @@ const PendingQATable = ({ incidents, loading, refresh }) => {
         <Table bordered hover responsive className="align-middle text-center">
           <thead className="table-light">
             <tr>
-               <th style={{ width: "65px" }}>
-  <Form.Check
-    type="checkbox"
-    checked={selectedIncidents.length === incidents.length && incidents.length > 0}
-    onChange={(e) => {
-      if (e.target.checked) {
-        // Select all incident SIDs
-        const allIds = incidents.map((i) => i.sid);
-        setSelectedIncidents(allIds);
-      } else {
-        // Deselect all
-        setSelectedIncidents([]);
-      }
-    }}
-  />
-  <span className="ms-1">Select All</span>
-</th>
-
+              <th style={{ width: "65px" }}>
+                <Form.Check
+                  type="checkbox"
+                  className="custom-checkbox"
+                  checked={selectedIncidents.length === incidents.length && incidents.length > 0}
+                  onChange={(e) => {
+                    if (e.target.checked) setSelectedIncidents(incidents.map((i) => i.sid));
+                    else setSelectedIncidents([]);
+                  }}
+                />
+                <span className="ms-1">Select All</span>
+              </th>
               <th>Incident No</th>
               <th>Short Description</th>
               <th>Handled By</th>
@@ -231,6 +219,7 @@ const PendingQATable = ({ incidents, loading, refresh }) => {
                   <td>
                     <Form.Check
                       type="checkbox"
+                      className="custom-checkbox"
                       checked={selectedIncidents.includes(incident.sid)}
                       onChange={() =>
                         setSelectedIncidents((prev) =>
@@ -242,7 +231,11 @@ const PendingQATable = ({ incidents, loading, refresh }) => {
                     />
                   </td>
                   <td>
-                    <Button variant="link" onClick={() => handleOpenModal(incident)} style={{ padding: 0 }}>
+                    <Button
+                      variant="link"
+                      onClick={() => handleOpenModal(incident)}
+                      style={{ padding: 0 }}
+                    >
                       {incident.incident_number}
                     </Button>
                   </td>
@@ -255,11 +248,7 @@ const PendingQATable = ({ incidents, loading, refresh }) => {
                     {incident.qc_analyst
                       ? incident.qc_analyst
                           .split(" ")
-                          .map(
-                            (word) =>
-                              word.charAt(0).toUpperCase() +
-                              word.slice(1).toLowerCase()
-                          )
+                          .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
                           .join(" ")
                       : "NA"}
                   </td>
@@ -285,7 +274,6 @@ const PendingQATable = ({ incidents, loading, refresh }) => {
               {/* Incident Info */}
               <div className="mb-4 p-3 border rounded shadow-sm bg-light">
                 <h6 className="fw-bold mb-3">Incident Information</h6>
-
                 <Row>
                   <Col md={4}>
                     <div className="info-field">
@@ -300,38 +288,33 @@ const PendingQATable = ({ incidents, loading, refresh }) => {
                     </div>
                   </Col>
                 </Row>
-
                 <Row className="mt-3">
-                   <Col md={4}>
+                  <Col md={4}>
                     <div className="info-field">
                       <span className="fw-bold me-2 d-block text-nowrap">Handled By:</span>
                       {loadingUsers ? (
                         <Spinner animation="border" size="sm" />
                       ) : (
-  <Form.Select
-    
-  value={formData.assigned_analyst || ""}
-  onChange={(e) =>
-    setFormData({ ...formData, assigned_analyst: e.target.value })
-  }
-  
->
-  <option value="">Select Agent</option>
-  {users.map((agent, index) => (
-    <option key={index} value={agent.full_name}>
-      {agent.full_name
-        ? agent.full_name.charAt(0).toUpperCase() +
-          agent.full_name.slice(1).toLowerCase()
-        : "Unknown"}
-    </option>
-  ))}
-</Form.Select>
-
-
+                        <Form.Select
+                          value={formData.assigned_analyst || ""}
+                          onChange={(e) =>
+                            setFormData({ ...formData, assigned_analyst: e.target.value })
+                          }
+                          className="custom-dropdown"
+                        >
+                          <option value="">Select Agent</option>
+                          {users.map((agent, index) => (
+                            <option key={index} value={agent.full_name}>
+                              {agent.full_name
+                                ? agent.full_name.charAt(0).toUpperCase() +
+                                  agent.full_name.slice(1).toLowerCase()
+                                : "Unknown"}
+                            </option>
+                          ))}
+                        </Form.Select>
                       )}
                     </div>
                   </Col>
-
                   <Col md={4}>
                     <div className="info-field">
                       <span className="fw-bold me-2">Handled On:</span>
@@ -346,113 +329,108 @@ const PendingQATable = ({ incidents, loading, refresh }) => {
                   </Col>
                 </Row>
               </div>
-                             {/* QA Details */}
-<div className="mb-4 p-3 border rounded shadow-sm bg-light">
-  <h6 className="fw-bold mb-3">QA Details</h6>
 
-  <Row className="mb-3">
-   <Col md={4}>
-      <Form.Group>
-        <Form.Label className="fw-bold">QA Status</Form.Label>
-        <Form.Select
-          name="qa_status"
-          value={formData.qa_status || ""}
-          onChange={handleChange}
-          className="border border-secondary"
-        >
-          <option value="">-- Select QA Status --</option>
-          <option value="pass">Pass</option>
-          <option value="fail">Fail</option>
-        </Form.Select>
-      </Form.Group>
-    </Col>
-  <Col md={4}>
-    <Form.Group>
-      <Form.Label className="fw-bold">QA Done On</Form.Label>
-      <Form.Control
-        type="date"
-        name="audit_date"
-        value={formatDate(formData.audit_date)}
-        readOnly
-        className="border border-secondary bg-light"
-      />
-    </Form.Group>
-  </Col>
-  <Col md={4}>
-    <Form.Group>
-      <Form.Label className="fw-bold">QA Agent</Form.Label>
-      <Form.Control
-        type="text"
-        name="qc_analyst"
-        value={formData.qc_analyst || user?.full_name || user?.name || ""}
-        readOnly
-        className="border border-secondary bg-light"
-      />
-    </Form.Group>
-  </Col>
-</Row>
+              {/* QA Details */}
+              <div className="mb-4 p-3 border rounded shadow-sm bg-light">
+                <h6 className="fw-bold mb-3">QA Details</h6>
+                <Row className="mb-3">
+                  <Col md={4}>
+                    <Form.Group>
+                      <Form.Label className="fw-bold">QA Status</Form.Label>
+                      <Form.Select
+                        name="qa_status"
+                        value={formData.qa_status || ""}
+                        onChange={handleChange}
+                        className="custom-dropdown"
+                      >
+                        <option value="">-- Select QA Status --</option>
+                        <option value="pass">Pass</option>
+                        <option value="fail">Fail</option>
+                      </Form.Select>
+                    </Form.Group>
+                  </Col>
+                  <Col md={4}>
+                    <Form.Group>
+                      <Form.Label className="fw-bold">QA Done On</Form.Label>
+                      <Form.Control
+                        type="date"
+                        name="audit_date"
+                        value={formatDate(formData.audit_date)}
+                        readOnly
+                        className="border border-secondary bg-light"
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={4}>
+                    <Form.Group>
+                      <Form.Label className="fw-bold">QA Agent</Form.Label>
+                      <Form.Control
+                        type="text"
+                        name="qc_analyst"
+                        value={formData.qc_analyst || user?.full_name || user?.name || ""}
+                        readOnly
+                        className="border border-secondary bg-light"
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
 
+                {/* QA Comments Dropdown + Total Score */}
+                <Row className="align-items-end">
+                  <Col md={8}>
+                    <Form.Group>
+                      <Form.Label className="fw-bold">QA Comments</Form.Label>
+                      <Dropdown
+                        show={dropdownOpen}
+                        onToggle={() => setDropdownOpen(!dropdownOpen)}
+                      >
+                        <Dropdown.Toggle
+                          variant="secondary"
+                          className="d-flex justify-content-between align-items-center w-100 custom-dropdown"
+                        >
+                          <span>
+                            {selectedComments.length > 0
+                              ? selectedComments.map((c) => c.check_point_name).join(", ")
+                              : "Select QA Comments"}
+                          </span>
+                        </Dropdown.Toggle>
 
-  {/* QA Comments Dropdown + Total Score in one row */}
-   <Row className="align-items-end">
-  <Col md={8}>
-    <Form.Group>
-      <Form.Label className="fw-bold">QA Comments</Form.Label>
-      <Dropdown show={dropdownOpen} onToggle={() => setDropdownOpen(!dropdownOpen)}>
-        <Dropdown.Toggle
-          variant="secondary"
-          className="d-flex justify-content-between align-items-center w-100 border border-secondary px-2 text-truncate"
-          style={{
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-          }}
-        >
-          <span>
-            {selectedComments.length > 0
-              ? selectedComments.map((c) => c.check_point_name).join(", ")
-              : "Select QA Comments"}
-          </span>
-          {/* <span className="ms-2">&#9662;</span> Arrow always on right */}
-        </Dropdown.Toggle>
+                        <Dropdown.Menu
+                          style={{ maxHeight: "200px", overflowY: "auto", width: "100%" }}
+                        >
+                          {qualityPoints.map((item) => (
+                            <Form.Check
+                              key={item.sid}
+                              type="checkbox"
+                              id={`qa-${item.sid}`}
+                              label={`${item.check_point_name} (${item.point_value} pts)`}
+                              checked={!!selectedComments.find((c) => c.sid === item.sid)}
+                              onChange={() => handleCommentToggle(item)}
+                              className="mx-3 my-1 custom-checkbox"
+                            />
+                          ))}
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    </Form.Group>
+                  </Col>
 
-        <Dropdown.Menu style={{ maxHeight: "200px", overflowY: "auto", width: "100%" }}>
-          {qualityPoints.map((item) => (
-            <Form.Check
-              key={item.sid}
-              type="checkbox"
-              id={`qa-${item.sid}`}
-              label={`${item.check_point_name} (${item.point_value} pts)`}
-              checked={!!selectedComments.find((c) => c.sid === item.sid)}
-              onChange={() => handleCommentToggle(item)}
-              className="mx-3 my-1"
-            />
-          ))}
-        </Dropdown.Menu>
-      </Dropdown>
-    </Form.Group>
-  </Col>
-
-  <Col md={4}>
-    <Form.Group>
-      <Form.Label className="fw-bold">Total Score</Form.Label>
-      <Form.Control
-        type="number"
-        value={totalScore}
-        readOnly
-        className="border border-secondary bg-light"
-      />
-    </Form.Group>
-  </Col>
-</Row>
-
-</div>
-
+                  <Col md={4}>
+                    <Form.Group>
+                      <Form.Label className="fw-bold">Total Score</Form.Label>
+                      <Form.Control
+                        type="number"
+                        value={totalScore}
+                        readOnly
+                        className="border border-secondary bg-light"
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+              </div>
 
               {/* Grooming Section */}
               <div className="mb-4 p-3 border rounded shadow-sm bg-light">
                 <h6 className="fw-bold mb-3">Grooming Details</h6>
-
                 <Row className="mb-3">
                   <Col md={4}>
                     <Form.Group>
@@ -461,7 +439,7 @@ const PendingQATable = ({ incidents, loading, refresh }) => {
                         name="grooming_needed"
                         value={formData.grooming_needed ? "Yes" : "No"}
                         onChange={handleChange}
-                        className="border border-secondary"
+                        className="custom-dropdown"
                       >
                         <option value="No">No</option>
                         <option value="Yes">Yes</option>
@@ -481,31 +459,31 @@ const PendingQATable = ({ incidents, loading, refresh }) => {
                     </Form.Group>
                   </Col>
                   <Row className="mt-3">
-                              <Col md={6}>
-                                <Form.Group>
-                                  <Form.Label className="fw-bold">Grooming Done</Form.Label>
-                                  <Form.Check
-                                    type="checkbox"
-                                    name="grooming_done"
-                                    checked={!!formData.grooming_done}
-                                    onChange={handleChange}
-                                    label="Mark as Done"
-                                  />
-                                </Form.Group>
-                              </Col>
-                              <Col md={6}>
-                                <Form.Group>
-                                  <Form.Label className="fw-bold">KBA Resolution Updated</Form.Label>
-                                  <Form.Check
-                                    type="checkbox"
-                                    name="kba_resolution_updated"
-                                    checked={!!formData.kba_resolution_updated}
-                                    onChange={handleChange}
-                                    label="Yes"
-                                  />
-                                </Form.Group>
-                              </Col>
-                            </Row>
+                    <Col md={6}>
+                      <Form.Group>
+                        <Form.Label className="fw-bold">Grooming Done</Form.Label>
+                        <Form.Check
+                          type="checkbox"
+                          name="grooming_done"
+                          checked={!!formData.grooming_done}
+                          onChange={handleChange}
+                          label="Mark as Done"
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col md={6}>
+                      <Form.Group>
+                        <Form.Label className="fw-bold">KBA Resolution Updated</Form.Label>
+                        <Form.Check
+                          type="checkbox"
+                          name="kba_resolution_updated"
+                          checked={!!formData.kba_resolution_updated}
+                          onChange={handleChange}
+                          label="Yes"
+                        />
+                      </Form.Group>
+                    </Col>
+                  </Row>
                 </Row>
               </div>
             </Form>
@@ -526,6 +504,3 @@ const PendingQATable = ({ incidents, loading, refresh }) => {
 };
 
 export default PendingQATable;
-
-
-

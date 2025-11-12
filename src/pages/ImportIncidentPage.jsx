@@ -38,7 +38,7 @@ const ImportIncidentPage = () => {
       setUploaded(false);
 
       const res = await api.post(
-        "http://localhost:8000/api/users/import-incidents-from-excel?user_sid=a17692bf-2164-4929-90f2-8b25f65c9445",
+        "/users/import-incidents-from-excel?user_sid=a17692bf-2164-4929-90f2-8b25f65c9445",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

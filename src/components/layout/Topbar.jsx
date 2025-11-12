@@ -1,8 +1,5 @@
-
- // src/components/layout/Topbar.jsx
-
-
- import { Navbar, Nav, Dropdown, Image } from "react-bootstrap";
+// src/components/layout/Topbar.jsx
+import { Navbar, Nav, Dropdown, Image } from "react-bootstrap";
 import { FaBars } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +9,7 @@ const Topbar = ({ onToggleSidebar }) => {
   const { logout, user } = useAuth();
   const navigate = useNavigate();
 
+  // Handle user logout
   const handleLogout = () => {
     logout();
     navigate("/login");
@@ -19,12 +17,17 @@ const Topbar = ({ onToggleSidebar }) => {
 
   return (
     <Navbar bg="light" expand="lg" className="shadow-sm px-3">
+      {/* Sidebar Toggle */}
       <FaBars
         className="me-3"
         style={{ cursor: "pointer", fontSize: "1.5rem" }}
         onClick={onToggleSidebar}
       />
+
+      {/* Title */}
       <Navbar.Brand className="fw-bold">Dashboard</Navbar.Brand>
+
+      {/* User Menu */}
       <Nav className="ms-auto">
         <Dropdown align="end">
           <Dropdown.Toggle

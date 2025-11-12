@@ -9,7 +9,7 @@ import { ToastContainer, toast } from "react-toastify";
 // ✅ Google OAuth Client ID
 const CLIENT_ID =
   // "674709009669-3519te6nrkibu3lli3unbt8r46s30a26.apps.googleusercontent.com";// local host CD
-"674709009669-1sbainjtfkkf5ai3v4o2ovftib7uafmn.apps.googleusercontent.com";
+"674709009669-9ujsu99k43pp14t922nvvhal0knfi1at.apps.googleusercontent.com";
 const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth(); // Access login function from AuthContext

@@ -82,6 +82,24 @@
   text-overflow: ellipsis;
 }
 
+.qa-comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;                 /* Space between comments */
+  padding: 5px 0;
+}
+
+.qa-comment-item {
+  background: #f8f9fa;      /* Light background */
+  border-left: 4px solid #0d6efd; /* Blue bar */
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  word-wrap: break-word;     /* Prevent long text overflow */
+  white-space: normal !important; /* Fix overlap */
+  line-height: 1.3;
+}
+
 @media (max-width: 992px) {
   .short-desc-cell {
     max-width: 180px;
@@ -89,19 +107,22 @@
 }
 
 
-.qa-comments-list {
+/* .qa-comments-list {
   display: flex;
   flex-direction: column;
   gap: 4px;
-}
+} */
 
-.qa-comment-item {
-  white-space: wrap;        /* ✅ keeps it on one line */
-  overflow: hidden;           /* hides overflowed text */
-  text-overflow: ellipsis;    /* adds "..." if it’s too long */
+/* .qa-comment-item {
+  white-space: wrap;         
+  overflow: hidden;          
+  text-overflow: ellipsis;    
   font-size: 0.95rem;
   line-height: 1.4;
-}
+} */
+
+
+
 
 @media (max-width: 768px) {
   .qa-comment-item {

@@ -3,8 +3,9 @@ import { Table, Modal, Button, Form, Row, Col, Spinner,Dropdown  } from "react-b
 import { useAuth } from "../../context/AuthContext";
 import axios from "axios";
 import api from "../../api/axois";
+import { ToastContainer, toast } from "react-toastify";
 import "../PendingQATable.css";
-const GroomingTable = ({ incidents, loading }) => {
+const GroomingTable = ({ incidents, loading ,refresh}) => {
   const [selectedIncident, setSelectedIncident] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -215,10 +216,15 @@ selectedComments.forEach((item) => {
      ];
  
      const res = await api.post("/users/update/incident-status", payload);
+     toast.success("Incident status updated successfully!", {
+  position: "top-right",
+  autoClose: 2500,
+});
+     if (refresh) refresh();
  
-     alert(
-       `Message: ${res.data.message}\nIncident IDs: ${res.data.incident_ids?.join(", ")}`
-     );
+    //  alert(
+    //    `Message: ${res.data.message}\nIncident IDs: ${res.data.incident_ids?.join(", ")}`
+    //  );
  
      // ✅ Local removal: if resolved, remove from table immediately
      if (formData.resolution_status?.toLowerCase() === "resolved") {
@@ -347,9 +353,9 @@ selectedComments.forEach((item) => {
               </th>
               <th>Incident No</th>
                 <th>Short Description</th>
-              <th>Assigned Analyst</th>
-              <th>Incident Date</th>
-              <th>Priority</th>
+              <th>Handled By</th>
+              <th>Handled On</th>
+              <th>QC-Analyst</th>
             </tr>
           </thead>
           <tbody>
@@ -392,7 +398,12 @@ selectedComments.forEach((item) => {
 </td>
 
                   <td>{incident.incident_date || "NA"}</td>
-                  <td>{incident.priority || "N/A"}</td>
+                    <td>
+                    {incident.qc_analyst
+                      ? incident.qc_analyst.charAt(0).toUpperCase() +
+                        incident.qc_analyst.slice(1).toLowerCase()
+                      : "NA"}
+                  </td>
                 </tr>
               ))
             ) : (
@@ -603,6 +614,8 @@ selectedComments.forEach((item) => {
     </Button>
   </Modal.Footer>
 </Modal>
+<ToastContainer />
+
 
     </div>
   );

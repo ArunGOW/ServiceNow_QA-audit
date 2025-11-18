@@ -387,6 +387,12 @@ const PendingQATable = ({ incidents, loading, refresh }) => {
                         <Dropdown.Toggle
                           variant="secondary"
                           className="d-flex justify-content-between align-items-center w-100 custom-dropdown"
+                           style={{
+    whiteSpace: "normal",
+    wordBreak: "break-word",
+    textAlign: "left",
+    minHeight: "38px",
+  }} 
                         >
                           <span>
                             {selectedComments.length > 0

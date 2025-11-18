@@ -237,8 +237,8 @@
 //                     selectedIncidents.length === incidents.length
 //                   }
 //                   onChange={handleSelectAll}
-                  
-                    
+
+
 //                 />
 //                 <span className="ms-1">Select All</span>
 //               </th>
@@ -512,18 +512,18 @@ const UnassignedTable = ({ incidents = [], loading, refresh }) => {
     setLocalIncidents(incidents);
   }, [incidents]);
 
- // ✅ Fetch only QA Admins
-useEffect(() => {
-  const fetchUsers = async () => {
-    try {
-      const res = await api.get("/users/get/list_users?type=qa_admin"); // <-- filter in API
-      setUsers(res.data || []);
-    } catch (error) {
-      console.error("❌ Error fetching QA Admins:", error);
-    }
-  };
-  fetchUsers();
-}, []);
+  // ✅ Fetch only QA Admins
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const res = await api.get("/users/get/list_users?type=qa_admin"); // <-- filter in API
+        setUsers(res.data || []);
+      } catch (error) {
+        console.error("❌ Error fetching QA Admins:", error);
+      }
+    };
+    fetchUsers();
+  }, []);
 
 
   // Toast helper
@@ -658,41 +658,53 @@ useEffect(() => {
       <div className="d-flex justify-content-between align-items-center mb-3">
         <div></div>
         <div className="">
-<h5 className="fw-bold">Unassigned Incidents</h5>
+          <h5 className="fw-bold">Unassigned Incidents</h5>
         </div>
-        
+
         <div className="d-flex gap-2">
           {/* <Form.Select
             size="sm"
             value={selectedUser}
             onChange={(e) => setSelectedUser(e.target.value)}
+            className="shadow-sm border-primary fw-semibold text-secondary"
+            style={{
+              width: "220px",
+              borderRadius: "10px",
+              cursor: "pointer",
+              transition: "0.3s ease",
+            }}
           >
-            <option value="">-- Select User --</option>
+            <option value="">-- Select QA Admin --</option>
             {users.map((user) => (
+              // <option key={user.sid} value={user.sid}>
+              //   {user.full_name}
+              // </option>
               <option key={user.sid} value={user.sid}>
-                {user.full_name}
+                {user.full_name
+                  .toLowerCase()
+                  .replace(/\b\w/g, (char) => char.toUpperCase())}
               </option>
+
             ))}
           </Form.Select> */}
-         <Form.Select
+
+          <Form.Select
   size="sm"
   value={selectedUser}
   onChange={(e) => setSelectedUser(e.target.value)}
-  className="shadow-sm border-primary fw-semibold text-secondary"
-  style={{
-    width: "220px",
-    borderRadius: "10px",
-    cursor: "pointer",
-    transition: "0.3s ease",
-  }}
+  className="custom-select shadow-sm fw-semibold"
 >
   <option value="">-- Select QA Admin --</option>
+
   {users.map((user) => (
     <option key={user.sid} value={user.sid}>
-      {user.full_name}
+      {user.full_name
+        .toLowerCase()
+        .replace(/\b\w/g, (char) => char.toUpperCase())}
     </option>
   ))}
 </Form.Select>
+
 
 
 
@@ -755,11 +767,11 @@ useEffect(() => {
                     {incident.incident_number}
                   </td>
                   <td>{incident.incident_date}</td>
-                                     <td className="short-desc-cell">
-  <div className="short-desc-text" title={incident.short_description}>
-    {incident.short_description || "N/A"}
-  </div>
-</td>
+                  <td className="short-desc-cell">
+                    <div className="short-desc-text" title={incident.short_description}>
+                      {incident.short_description || "N/A"}
+                    </div>
+                  </td>
                   <td>
                     <span className="badge bg-warning text-dark">
                       {incident.resolution_status || "Unassigned"}

@@ -242,14 +242,21 @@ const PendingQATable = ({ incidents, loading, refresh }) => {
                   <td className="text-truncate" style={{ maxWidth: "300px" }}>
                     {incident.short_description || "N/A"}
                   </td>
-                  <td>{incident.assigned_analyst || "N/A"}</td>
+                  <td>
+                    {incident.assigned_analyst
+                      ? incident.assigned_analyst
+                        .toLowerCase()
+                        .replace(/\b\w/g, (char) => char.toUpperCase())
+                      : "N/A"}
+                  </td>
+
                   <td>{formatDate(incident.incident_date)}</td>
                   <td>
                     {incident.qc_analyst
                       ? incident.qc_analyst
-                          .split(" ")
-                          .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-                          .join(" ")
+                        .split(" ")
+                        .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                        .join(" ")
                       : "NA"}
                   </td>
                 </tr>
@@ -307,7 +314,7 @@ const PendingQATable = ({ incidents, loading, refresh }) => {
                             <option key={index} value={agent.full_name}>
                               {agent.full_name
                                 ? agent.full_name.charAt(0).toUpperCase() +
-                                  agent.full_name.slice(1).toLowerCase()
+                                agent.full_name.slice(1).toLowerCase()
                                 : "Unknown"}
                             </option>
                           ))}
@@ -387,12 +394,12 @@ const PendingQATable = ({ incidents, loading, refresh }) => {
                         <Dropdown.Toggle
                           variant="secondary"
                           className="d-flex justify-content-between align-items-center w-100 custom-dropdown"
-                           style={{
-    whiteSpace: "normal",
-    wordBreak: "break-word",
-    textAlign: "left",
-    minHeight: "38px",
-  }} 
+                          style={{
+                            whiteSpace: "normal",
+                            wordBreak: "break-word",
+                            textAlign: "left",
+                            minHeight: "38px",
+                          }}
                         >
                           <span>
                             {selectedComments.length > 0

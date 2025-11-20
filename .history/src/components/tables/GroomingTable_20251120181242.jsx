@@ -481,7 +481,7 @@ const GroomingTable = ({ incidents, loading, refresh }) => {
               <th>Short Description</th>
                <th>Handled On</th>
               <th>Handled By</th>
-              <th>QC Date</th>
+              <th>QC Done On</th>
               <th>QC-Analyst</th>
             </tr>
           </thead>

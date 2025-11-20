@@ -641,7 +641,7 @@ const ProcessedQATable = ({ incidents, loading, refresh }) => {
                           .join(" ")
                       : "N/A"}
                   </td>
-                  <td>{formatDate(incident.updated_at) || "N/A"}</td>
+                  <td>{incident.updated_at || "N/A"}</td>
                   <td>
                     {incident.qc_analyst
                       ? incident.qc_analyst.charAt(0).toUpperCase() +

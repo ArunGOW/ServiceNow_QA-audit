@@ -638,8 +638,8 @@ const UnassignedTable = ({ incidents = [], loading, refresh }) => {
               </th>
               <th>Incident No</th>
                <th>Description</th>
-              <th>Handled On</th>
-              <th>Handled By</th>
+              <th>Date</th>
+              <th>Handled by</th>
               <th>Status</th>
             </tr>
           </thead>

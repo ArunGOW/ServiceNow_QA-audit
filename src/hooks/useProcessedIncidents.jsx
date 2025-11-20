@@ -1,59 +1,10 @@
-//  import { useState, useEffect } from "react";
-// import axios from "axios";
-// import { useAuth } from "../context/AuthContext";
-
-// const useProcessedIncidents = (currentPage, limit = 10) => {
-//   const { user } = useAuth();
-//   const [processedIncidents, setProcessedIncidents] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [totalPages, setTotalPages] = useState(1);
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       if (!user?.user_sid) {
-//         console.warn("⚠️ No user_sid found, skipping fetch.");
-//         return;
-//       }
-
-//       setLoading(true);
-//       try {
-//         const res = await axios.post(
-//           "http://localhost:8000/api/users/get-processed/incidents/",
-//           {
-//             user_sid: user.user_sid,
-//             page: currentPage,
-//             per_page: limit,
-//           }
-//         );
-
-//         console.log("📌 Processed API Response:", res.data);
-
-//         // ✅ Use `response` array from backend
-//         setProcessedIncidents(Array.isArray(res.data.response) ? res.data.response : []);
-
-//         // ✅ Calculate total pages
-//         if (res.data.total) {
-//           setTotalPages(Math.ceil(res.data.total / limit));
-//         }
-//       } catch (error) {
-//         console.error("❌ Error fetching processed incidents:", error);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchData();
-//   }, [currentPage, user, limit]);
-
-//   return { processedIncidents, loading, totalPages };
-// };
-
-// export default useProcessedIncidents;
+ 
 
 
 import { useState, useEffect } from "react";
 import api from "../api/axois";
 import { useAuth } from "../context/AuthContext";
+import logger from "../utils/logger";
 
 const useProcessedIncidents = (currentPage, limit = 10) => {
   const { user } = useAuth();
@@ -64,7 +15,7 @@ const useProcessedIncidents = (currentPage, limit = 10) => {
   useEffect(() => {
       if (!user) return;
     if (!user?.user_sid) {
-      console.warn("⚠️ No user_sid found, skipping fetch.");
+       logger.warn("⚠️ No user_sid found, skipping fetch.");
       return;
     }
 
@@ -80,7 +31,7 @@ const useProcessedIncidents = (currentPage, limit = 10) => {
           }
         );
 
-        console.log("📌 Processed API Response:", res.data);
+        logger.info("📌 Processed API Response:", res.data);
 
         // ✅ Safely handle response array
         setProcessedIncidents(
@@ -92,7 +43,7 @@ const useProcessedIncidents = (currentPage, limit = 10) => {
           setTotalPages(Math.ceil(res.data.total / limit));
         }
       } catch (error) {
-        console.error("❌ Error fetching processed incidents:", error);
+         logger.error("❌ Error fetching processed incidents:", error);
       } finally {
         setLoading(false);
       }
@@ -105,3 +56,66 @@ const useProcessedIncidents = (currentPage, limit = 10) => {
 };
 
 export default useProcessedIncidents;
+
+
+// import { useState, useEffect } from "react";
+// import api from "../api/axois";
+// import { useAuth } from "../context/AuthContext";
+// import logger from "../utils/logger";
+
+// const useProcessedIncidents = (currentPage, limit = 10) => {
+//   const { user } = useAuth();
+
+//   const [processedIncidents, setProcessedIncidents] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [totalPages, setTotalPages] = useState(1);
+
+//   useEffect(() => {
+//     if (!user) return;
+
+//     if (!user?.user_sid) {
+//       logger.warn("User SID missing. Skipping processed incidents fetch.");
+//       return;
+//     }
+
+//     const fetchData = async () => {
+//       logger.info("Fetching processed incidents request", {
+//         page: currentPage,
+//         limit,
+//         user_sid: user.user_sid,
+//       });
+
+//       setLoading(true);
+
+//       try {
+//         const res = await api.post("/users/get-processed/incidents/", {
+//           user_sid: user.user_sid,
+//           page: currentPage,
+//           per_page: limit,
+//         });
+
+//         logger.info("Processed incidents API response:", res.data);
+
+//         const responseList = Array.isArray(res.data.response)
+//           ? res.data.response
+//           : [];
+
+//         setProcessedIncidents(responseList);
+
+//         if (res.data.total) {
+//           setTotalPages(Math.ceil(res.data.total / limit));
+//         }
+//       } catch (error) {
+//         logger.error("Error fetching processed incidents:", error.response?.data || error);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchData();
+//   }, [currentPage, user, limit]);
+
+//   return { processedIncidents, loading, totalPages };
+// };
+
+// export default useProcessedIncidents;

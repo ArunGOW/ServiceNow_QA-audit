@@ -4,6 +4,8 @@
 import { useState } from "react";
 import { Form, Button, Card, Alert, Table, ProgressBar, Toast, ToastContainer } from "react-bootstrap";
 import api from "../api/axois";
+import {  useRef } from "react";
+
 
 const ImportIncidentPage = () => {
   const [file, setFile] = useState(null);
@@ -12,15 +14,27 @@ const ImportIncidentPage = () => {
   const [progress, setProgress] = useState(0);
   const [uploaded, setUploaded] = useState(false);
   const [showToast, setShowToast] = useState(false);
+  const [hideResetBtn, setHideResetBtn] = useState(false);
+
+  const fileInputRef = useRef(null);
+
 
   const resetForm = () => {
+     setHideResetBtn(true);
     setFile(null);
+    if (fileInputRef.current) {
+  fileInputRef.current.value = "";
+}
     setResponse(null);
     setLoading(false);
     setProgress(0);
     setUploaded(false);
     setShowToast(false);
   };
+
+
+ 
+ 
 
   const handleImport = async (e) => {
     e.preventDefault();
@@ -37,8 +51,7 @@ const ImportIncidentPage = () => {
       setProgress(0);
       setUploaded(false);
 
-      const res = await api.post(
-        "/users/import-incidents-from-excel?user_sid=a17692bf-2164-4929-90f2-8b25f65c9445",
+      const res = await api.post("/users/import-incidents-from-excel",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -82,10 +95,13 @@ const ImportIncidentPage = () => {
           📂 Import Incidents
         </h4>
 
-        {response?.message && <Alert variant="info" className="shadow-sm">{response.message}</Alert>}
+        {/* {response?.message && <Alert variant="info" className="shadow-sm">{response.message}</Alert>} */}
+
+         
+       
 
         <Form onSubmit={handleImport}>
-          <Form.Group controlId="formFile" className="mb-3">
+          {/* <Form.Group controlId="formFile" className="mb-3">
             <Form.Label className="fw-semibold">Select Excel/CSV file</Form.Label>
             <Form.Control
               type="file"
@@ -94,7 +110,48 @@ const ImportIncidentPage = () => {
               className="p-3 rounded border-0 shadow-sm"
               disabled={uploaded}
             />
-          </Form.Group>
+          </Form.Group> */}
+          <Form.Group controlId="formFile" className="mb-3">
+  <Form.Label className="fw-semibold">Select Excel/CSV file</Form.Label>
+
+  <div style={{ position: "relative" }}>
+    {/* File Input */}
+    <Form.Control
+      type="file"
+      accept=".csv,.xlsx"
+      ref={fileInputRef}
+      onChange={(e) => setFile(e.target.files[0])}
+      className="p-3 rounded border-0 shadow-sm"
+      disabled={uploaded}
+    />
+
+    {/* Remove Button (❌) */}
+    {file && (
+      <button
+        type="button"
+        onClick={() => {
+          setFile(null);
+          if (fileInputRef.current) fileInputRef.current.value = "";
+        }}
+        style={{
+          position: "absolute",
+          right: "15px",
+          top: "50%",
+          transform: "translateY(-50%)",
+          background: "transparent",
+          border: "none",
+          fontSize: "18px",
+          cursor: "pointer",
+          color: "#dc3545",
+          fontWeight: "bold",
+        }}
+      >
+        ✕
+      </button>
+    )}
+  </div>
+</Form.Group>
+
 
            {progress > 0 && !uploaded && (
   <ProgressBar
@@ -140,7 +197,7 @@ const ImportIncidentPage = () => {
       </Card>
 
       {/* Toast Notification */}
-      <ToastContainer position="top-end" className="p-3">
+      {/* <ToastContainer position="top-end" className="p-3">
         <Toast
           onClose={() => setShowToast(false)}
           show={showToast}
@@ -152,6 +209,23 @@ const ImportIncidentPage = () => {
             <strong className="me-auto">Import Status</strong>
           </Toast.Header>
           <Toast.Body className="text-white">✅ File uploaded successfully!</Toast.Body>
+        </Toast>
+      </ToastContainer> */}
+         <ToastContainer position="top-end" className="p-3">
+        <Toast
+          onClose={() => setShowToast(false)}
+          show={showToast}
+          delay={3000}
+          autohide
+          bg="success"
+        >
+          <Toast.Header>
+            <strong className="me-auto">Import Status</strong>
+          </Toast.Header>
+         <Toast.Body className="text-white">
+  {response?.message && response.message}
+</Toast.Body>
+
         </Toast>
       </ToastContainer>
 

@@ -1,58 +1,10 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { useAuth } from "../context/AuthContext";
-import api from "../api/axois";
+// import { useState, useEffect } from "react";
+// import axios from "axios";
+// import { useAuth } from "../context/AuthContext";
+// import api from "../api/axois";
+// import logger from "../utils/logger";
 
-const useGroomingIncidents = (currentPage, limit = 10) => {
-  const { user } = useAuth();
-  const [groomingIncidents, setGroomingIncidents] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [totalPages, setTotalPages] = useState(1);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!user?.user_sid) {
-        console.warn("⚠️ No user_sid found, skipping fetch.");
-        return;
-      }
-
-      setLoading(true);
-      try {
-        const res = await api.post(
-          "/users/user/grooming-needed",
-          {
-            user_sid: user.user_sid,
-            page: currentPage,
-            per_page: limit,
-          }
-        );
-
-        console.log("📌 Grooming API Response:", res.data);
-
-        // ✅ Assume data is inside response array
-        setGroomingIncidents(Array.isArray(res.data.response) ? res.data.response : []);
-
-        // ✅ Calculate total pages if available
-        if (res.data.total) {
-          setTotalPages(Math.ceil(res.data.total / limit));
-        }
-      } catch (error) {
-        console.error("❌ Error fetching grooming incidents:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [currentPage, user, limit]);
-
-  return { groomingIncidents, loading, totalPages };
-};
-
-export default useGroomingIncidents;
-
-
-// const useGroomingIncidents = (currentPage, limit = 10, reload = 0) => {
+// const useGroomingIncidents = (currentPage, limit = 10) => {
 //   const { user } = useAuth();
 //   const [groomingIncidents, setGroomingIncidents] = useState([]);
 //   const [loading, setLoading] = useState(true);
@@ -60,7 +12,73 @@ export default useGroomingIncidents;
 
 //   useEffect(() => {
 //     const fetchData = async () => {
-//       if (!user?.user_sid) return;
+//       if (!user?.user_sid) {
+//         logger.warn("⚠️ No user_sid found, skipping fetch.");
+//         return;
+//       }
+
+//       setLoading(true);
+//       try {
+//         const res = await api.post(
+//           "/users/user/grooming-needed",
+//           {
+//             user_sid: user.user_sid,
+//             page: currentPage,
+//             per_page: limit,
+//           }
+//         );
+
+//         logger.info("📌 Grooming API Response:", res.data);
+
+//         // ✅ Assume data is inside response array
+//         setGroomingIncidents(Array.isArray(res.data.response) ? res.data.response : []);
+
+//         // ✅ Calculate total pages if available
+//         if (res.data.total) {
+//           setTotalPages(Math.ceil(res.data.total / limit));
+//         }
+//       } catch (error) {
+//         logger.error("❌ Error fetching grooming incidents:", error);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchData();
+//   }, [currentPage, user, limit]);
+
+//   return { groomingIncidents, loading, totalPages };
+// };
+
+// export default useGroomingIncidents;
+
+
+//logger added code 
+
+// import { useState, useEffect } from "react";
+// import axios from "axios";
+// import { useAuth } from "../context/AuthContext";
+// import api from "../api/axois";
+// import logger from "../utils/logger"; // <-- Import logger
+
+// const useGroomingIncidents = (currentPage, limit = 10) => {
+//   const { user } = useAuth();
+//   const [groomingIncidents, setGroomingIncidents] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [totalPages, setTotalPages] = useState(1);
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       if (!user?.user_sid) {
+//         logger.warn("No user_sid found — skipping grooming incidents fetch.");
+//         return;
+//       }
+
+//       logger.info("Fetching grooming incidents...", {
+//         user_sid: user.user_sid,
+//         page: currentPage,
+//         per_page: limit,
+//       });
 
 //       setLoading(true);
 
@@ -71,24 +89,151 @@ export default useGroomingIncidents;
 //           per_page: limit,
 //         });
 
+//         logger.info("Grooming API Response:", res.data);
+
+//         // Set response data
 //         setGroomingIncidents(
 //           Array.isArray(res.data.response) ? res.data.response : []
 //         );
 
+//         // Calculate total pages
 //         if (res.data.total) {
-//           setTotalPages(Math.ceil(res.data.total / limit));
+//           const pages = Math.ceil(res.data.total / limit);
+//           setTotalPages(pages);
+
+//           logger.info(`Total grooming pages: ${pages}`);
 //         }
 //       } catch (error) {
-//         console.error("Error fetching grooming incidents:", error);
+//         logger.error("Error fetching grooming incidents:", error);
 //       } finally {
 //         setLoading(false);
+//         logger.info("Grooming incidents fetch complete");
 //       }
 //     };
 
 //     fetchData();
-//   }, [currentPage, user, limit, reload]);  // 🔥 Add reload dependency
+//   }, [currentPage, user, limit]);
 
 //   return { groomingIncidents, loading, totalPages };
 // };
 
 // export default useGroomingIncidents;
+
+
+ 
+
+
+
+//  import { useState, useEffect, useCallback } from "react";
+// import axios from "axios";
+// import { useAuth } from "../context/AuthContext";
+// import api from "../api/axois";
+// import logger from "../utils/logger";
+
+// const useGroomingIncidents = (currentPage, limit = 10) => {
+//   const { user } = useAuth();
+//   const [groomingIncidents, setGroomingIncidents] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [totalPages, setTotalPages] = useState(1);
+
+//   const fetchData = useCallback(async () => {
+//     if (!user?.user_sid) {
+//       logger.warn("⚠️ No user_sid found, skipping fetch.");
+//       return;
+//     }
+
+//     setLoading(true);
+
+//     try {
+//       const res = await api.post("/users/user/grooming-needed", {
+//         user_sid: user.user_sid,
+//         page: currentPage,
+//         per_page: limit,
+//       });
+
+//       logger.info("📌 Grooming API Response:", res.data);
+
+//       setGroomingIncidents(
+//         Array.isArray(res.data.response) ? res.data.response : []
+//       );
+
+//       if (res.data.total) {
+//         setTotalPages(Math.ceil(res.data.total / limit));
+//       }
+//     } catch (error) {
+//       logger.error("❌ Error fetching grooming incidents:", error);
+//     } finally {
+//       setLoading(false);
+//     }
+//   }, [user, currentPage, limit]);
+
+//   // Run on mount & when page change
+//   useEffect(() => {
+//     fetchData();
+//   }, [fetchData]);
+
+//   // 🔄 Expose refresh
+//   const refresh = () => {
+//     fetchData();
+//   };
+
+//   return { groomingIncidents, loading, totalPages, refresh };
+// };
+
+// export default useGroomingIncidents;
+
+import { useState, useEffect, useCallback } from "react";
+import api from "../api/axois";
+import logger from "../utils/logger";
+import { useAuth } from "../context/AuthContext";
+
+const useGroomingIncidents = (currentPage, limit = 10) => {
+  const { user } = useAuth();
+
+  const [groomingIncidents, setGroomingIncidents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const fetchData = useCallback(async () => {
+    if (!user?.user_sid) {
+      logger.warn("⚠️ No user_sid found, skipping fetch.");
+      setGroomingIncidents([]);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await api.post("/users/user/grooming-needed", {
+        user_sid: user.user_sid,
+        page: currentPage,
+        per_page: limit,
+      });
+
+      setGroomingIncidents(
+        Array.isArray(res.data.response) ? res.data.response : []
+      );
+
+      if (res.data.total) {
+        setTotalPages(Math.ceil(res.data.total / limit));
+      }
+    } catch (error) {
+      logger.error("❌ Grooming data fetch error:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [user, currentPage, limit]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const refresh = () => {
+    fetchData();
+  };
+
+  return { groomingIncidents, loading, totalPages, refresh };
+};
+
+export default useGroomingIncidents;

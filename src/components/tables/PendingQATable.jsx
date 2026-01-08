@@ -248,7 +248,7 @@ const handleCommentToggle = (parentPoint, subPoint) => {
 
 scores: scoresPayload,
 
-  updated_at: new Date().toISOString(),
+   
 
       },
 

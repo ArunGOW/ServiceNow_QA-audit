@@ -322,40 +322,69 @@ const GroomingTable = ({ incidents, loading, refresh }) => {
   // Select incidents
   
   const handleUpdate = async () => {
+       if (!formData?.incident_sid) {
+        logger.warn("Incident SID missing in update");
+        return toast.warn("Incident SID missing!");
+      }
+    
+      // 1. Initialize the scores object with ALL available categories set to 0
+      const scoresPayload = qualityPoints.reduce((acc, cat) => {
+        const categoryKey = cat.check_point_name.toLowerCase().replace(/\s+/g, '_');
+        
+        // Create the base structure for every category found in your points list
+        acc[categoryKey] = {
+          total: 0,
+          sub_scores: (cat.sub_categories || []).reduce((subAcc, sub) => {
+            const subKey = sub.sub_check_point_name.toLowerCase().replace(/\s+/g, '_');
+            subAcc[subKey] = 0; // Default all sub-scores to 0
+            return subAcc;
+          }, {})
+        };
+        return acc;
+      }, {});
+    
+      // 2. Fill in the actual selected values
+      selectedComments.forEach((item) => {
+        const categoryKey = item.parent_name.toLowerCase().replace(/\s+/g, '_');
+        const subKey = item.sub_check_point_name.toLowerCase().replace(/\s+/g, '_');
+    
+        if (scoresPayload[categoryKey]) {
+          scoresPayload[categoryKey].sub_scores[subKey] = item.max_points;
+          scoresPayload[categoryKey].total += (item.max_points || 0);
+        }
+      });
+    
+      // 3. Add the final total summary key
+      scoresPayload.total_score_achieved = totalScore;
   try {
-    const payload = [
-      {
-        incident_sid: formData.incident_sid,
-        incident_number: formData.incident_number,
-        incident_date: formatDate(formData.incident_date),
-        short_description: formData.short_description || "",
-        resolution_status: formData.resolution_status || "",
-        resolution_shared: formData.resolution_shared || "",
-        updates_link: formData.updates_link || "",
-        notes: formData.notes || "",
-        assigned_analyst: formData.assigned_analyst || "",
-        qc_analyst: formData.qc_analyst || "",
-        is_audited: true,
-        audit_status: formData.audit_status || "done",
-        audit_date: formatDate(formData.audit_date),
-        qa_status: formData.qa_status || "done",
-        rca_done: !!formData.rca_done,
-        grooming_needed: !!formData.grooming_needed,
-        grooming_done: !!formData.grooming_done,
-        kba_resolution_needed: !!formData.kba_resolution_needed,
-        kba_resolution_updated: !!formData.kba_resolution_updated,
-        updated_at: new Date().toISOString().split("T")[0],
+ const payload = [
+  {
+    incident_sid: formData.incident_sid,
+    incident_number: formData.incident_number,
+    incident_date: formatDate(formData.incident_date),
+    short_description: formData.short_description,
+    resolution_status: formData.resolution_status,
+    resolution_shared: formData.resolution_shared,
+    updates_link: formData.updates_link,
+    notes: formData.notes,
+    assigned_analyst: formData.assigned_analyst,
+  qc_analyst: user?.full_name || user?.name,
 
-        // scores object logic
-        scores: selectedComments.reduce((acc, item) => {
-          acc[item.check_point_name] = {
-            description: item.check_point_description,
-            point_value: item.point_value,
-          };
-          return acc;
-        }, {}),
-      },
-    ];
+    is_audited: true,
+    audit_status: "done",
+    audit_date: new Date().toISOString(),
+    rca_done: !!formData.rca_done,
+    grooming_needed: !!formData.grooming_needed,
+    grooming_done: true,
+    kba_resolution_needed: !!formData.kba_resolution_needed,
+    kba_resolution_updated: !!formData.kba_resolution_updated,
+    scores: scoresPayload,
+    updated_at: new Date().toISOString(),
+  },
+];
+
+
+    
 
     // // 1️⃣ First API call - fail edit
     // await api.post("/users/user/fail-edit", payload);
@@ -408,6 +437,7 @@ const GroomingTable = ({ incidents, loading, refresh }) => {
     };
 
     logger.info("🚀 Assign payload:", payload);
+    console.log("USER OBJECT:", user);
 
     try {
       const res = await api.post("/users/assign/incidents/", payload); // ✅ with token
@@ -673,19 +703,23 @@ const GroomingTable = ({ incidents, loading, refresh }) => {
 
                 <Row className="mb-3">
                   <Col md={4}>
-                    <Form.Group>
-                      <Form.Label className="fw-bold">Grooming Needed</Form.Label>
-                      <Form.Select
-                        name="grooming_needed"
-                        value={formData.grooming_needed ? "Yes" : "No"}
-                        onChange={handleChange}
-                        className="border border-secondary custom-select shadow-sm fw-semibold"
-                      >
-                        <option value="No">No</option>
-                        <option value="Yes">Yes</option>
-                      </Form.Select>
-                    </Form.Group>
-                  </Col>
+      <Form.Group>
+        <Form.Label className="fw-bold">
+          Grooming Done <span className="text-danger">*</span>
+        </Form.Label>
+        <Form.Check
+          type="checkbox"
+          name="grooming_done"
+          checked={!!formData.grooming_done}
+          onChange={handleChange}
+          label="Mark as Done"
+          isInvalid={!formData.grooming_done} // red border if not checked
+        />
+        <Form.Control.Feedback type="invalid">
+          Grooming must be marked as done to continue.
+        </Form.Control.Feedback>
+      </Form.Group>
+    </Col>
 
                   <Col md={8}>
                     <Form.Group>
@@ -702,29 +736,26 @@ const GroomingTable = ({ incidents, loading, refresh }) => {
                 </Row>
 
                 <Row>
-                  <Col md={6}>
-                    <Form.Group>
-                      <Form.Label className="fw-bold">Grooming Done</Form.Label>
-                      <Form.Check
-                        type="checkbox"
-                        name="grooming_done"
-                        checked={!!formData.grooming_done}
-                        onChange={handleChange}
-                        label="Mark as Done"
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col md={6}>
-                    <Form.Group>
-                      <Form.Label className="fw-bold">KBA Resolution Updated</Form.Label>
-                      <Form.Check
-                        type="checkbox"
-                        name="kba_resolution_updated"
-                        checked={!!formData.kba_resolution_updated}
-                        onChange={handleChange}
-                        label="Yes"
-                      />
-                    </Form.Group>
+                  
+                  <Col md={12}>
+           <Form.Group>
+  <Form.Label className="fw-bold">
+    Audit Notes / Observations <span className="text-danger">*</span>
+  </Form.Label>
+  <Form.Control
+    as="textarea"
+    rows={3}
+    name="notes"
+    required // Added browser-level hint
+    isInvalid={formData.notes === ""} // Optional: turns border red if empty
+    placeholder="Enter detailed feedback (Mandatory)..."
+    value={formData.notes || ""}
+    onChange={handleChange}
+  />
+  <Form.Control.Feedback type="invalid">
+    Notes are required to complete the audit.
+  </Form.Control.Feedback>
+</Form.Group>
                   </Col>
                 </Row>
               </div>
@@ -1327,16 +1358,16 @@ export default GroomingTable;
 
 //                 <Row>
 //                   <Col md={6}>
-//                     <Form.Group>
-//                       <Form.Label className="fw-bold">Grooming Done</Form.Label>
-//                       <Form.Check
-//                         type="checkbox"
-//                         name="grooming_done"
-//                         checked={!!formData.grooming_done}
-//                         onChange={handleChange}
-//                         label="Mark as Done"
-//                       />
-//                     </Form.Group>
+                    // <Form.Group>
+                    //   <Form.Label className="fw-bold">Grooming Done</Form.Label>
+                    //   <Form.Check
+                    //     type="checkbox"
+                    //     name="grooming_done"
+                    //     checked={!!formData.grooming_done}
+                    //     onChange={handleChange}
+                    //     label="Mark as Done"
+                    //   />
+                    // </Form.Group>
 //                   </Col>
 //                   <Col md={6}>
 //                     <Form.Group>

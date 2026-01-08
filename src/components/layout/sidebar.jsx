@@ -8,9 +8,9 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       {/* Logo Section */}
-      <div className="logo">
+      {/* <div className="logo">
         <img src={logo} alt="eServeCloudSolutions Logo" className="logo-img" />
-      </div>
+      </div> */}
 
       {/* Navigation Links */}
       <nav>

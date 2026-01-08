@@ -87,8 +87,8 @@ import { useAuth } from "../context/AuthContext";
 import { ToastContainer, toast } from "react-toastify";
 
 const CLIENT_ID =
-  // "333931502051-2am83v0nue2d2rugftbel9opfjo6o5g7.apps.googleusercontent.com";
-  "674709009669-1sbainjtfkkf5ai3v4o2ovftib7uafmn.apps.googleusercontent.com";
+  "333931502051-2am83v0nue2d2rugftbel9opfjo6o5g7.apps.googleusercontent.com";
+  // "674709009669-1sbainjtfkkf5ai3v4o2ovftib7uafmn.apps.googleusercontent.com";
 
 const Login = () => {
   const navigate = useNavigate();

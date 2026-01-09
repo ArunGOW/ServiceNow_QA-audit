@@ -35,62 +35,68 @@ const Login = () => {
    * - Calls backend `login()` from AuthContext
    * - Redirects to dashboard on success
    */
-  const handleGoogleLogin = () => {
-    // If Google SDK hasn't loaded yet
-    if (!window.google) {
-      toast.error("Google login not ready yet. Please wait a second and try again.");
-      return;
-    }
+ const handleGoogleLogin = () => {
+  // 🔍 DEBUG: Log the exact origin Google is checking against
+  console.log("Current Application Origin:", window.location.origin);
 
-    // Initialize Google OAuth2 token client
-    const client = window.google.accounts.oauth2.initTokenClient({
-      client_id: CLIENT_ID,
-      scope: "openid email profile", // Required scopes for user data
-      callback: async (tokenResponse) => {
-        try {
-          setLoading(true);
-          const { access_token } = tokenResponse;
+  if (!window.google) {
+    toast.error("Google login not ready yet. Please wait a second and try again.");
+    return;
+  }
 
-          // ✅ Fetch user info using the access token
-          const userInfo = await axios.get(
-            "https://www.googleapis.com/oauth2/v3/userinfo",
-            {
-              headers: { Authorization: `Bearer ${access_token}` },
-            }
-          );
+  // Initialize Google OAuth2 token client
+  const client = window.google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID,
+    scope: "openid email profile",
+    // ✅ ADD THIS: Ensuring the hint matches the origin if needed
+    ux_mode: "popup", 
+    callback: async (tokenResponse) => {
+      if (tokenResponse.error) {
+        console.error("Google Auth Error:", tokenResponse.error);
+        return toast.error("Auth failed: " + tokenResponse.error_description);
+      }
 
-          // console.log("🧩 Google User Info:", userInfo.data);
+      try {
+        setLoading(true);
+        const { access_token } = tokenResponse;
 
-          const { email, name, picture } = userInfo.data;
-
-          // If email not found in Google profile
-          if (!email) {
-            toast.error("Unable to fetch email from Google account.");
-            setLoading(false);
-            return;
+        // ✅ Fetch user info using the access token
+        const userInfo = await axios.get(
+          "https://www.googleapis.com/oauth2/v3/userinfo",
+          {
+            headers: { Authorization: `Bearer ${access_token}` },
           }
+        );
 
-          // ✅ Call backend AuthContext login with user details
-          const success = await login(email, name, picture);
+        const { email, name, picture } = userInfo.data;
 
-          if (success) {
-            toast.success(`Welcome ${name || email}!`);
-            navigate("/dashboard/pending-qa");
-          } else {
-            toast.error("Login failed!");
-          }
-        } catch (err) {
-          console.error("❌ Google Login Error:", err);
-          toast.error("Something went wrong during Google login.");
-        } finally {
+        if (!email) {
+          toast.error("Unable to fetch email from Google account.");
           setLoading(false);
+          return;
         }
-      },
-    });
 
-    // ✅ Request Google access token (this opens Google account popup)
-    client.requestAccessToken();
-  };
+        // ✅ Call backend AuthContext login with user details
+        const success = await login(email, name, picture);
+
+        if (success) {
+          toast.success(`Welcome ${name || email}!`);
+          navigate("/dashboard/pending-qa");
+        } else {
+          toast.error("Login failed!");
+        }
+      } catch (err) {
+        console.error("❌ Google Login Error:", err);
+        toast.error("Something went wrong during Google login.");
+      } finally {
+        setLoading(false);
+      }
+    },
+  });
+
+  // ✅ Request Google access token
+  client.requestAccessToken();
+};
 
   return (
     <div

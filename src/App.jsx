@@ -13,6 +13,7 @@ import ProcessedQAPage from "./pages/ProcessedQAPage";
 import GroomingPage from "./pages/GroomingPage";
 import ImportIncidentPage from "./pages/ImportIncidentPage";
 import UnassignedPage from "./pages/UnassignedPage";
+import UserDashboard from "./pages/UserDashboard";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
           <Route path="pending-grooming" element={<GroomingPage />} />
           <Route path="import-incident" element={<ImportIncidentPage />} />
           <Route path="unassigned-incident" element={<UnassignedPage />} />
+          <Route path="user-dashboard" element={<UserDashboard />} />
         </Route>
       </Routes>
     </AuthProvider>

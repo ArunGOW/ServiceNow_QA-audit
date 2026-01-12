@@ -14,6 +14,7 @@ import GroomingPage from "./pages/GroomingPage";
 import ImportIncidentPage from "./pages/ImportIncidentPage";
 import UnassignedPage from "./pages/UnassignedPage";
 import UserDashboard from "./pages/UserDashboard";
+import AlluserDashboard from "./pages/AlluserDashboard";
 
 function App() {
   return (
@@ -27,12 +28,14 @@ function App() {
 
         {/* Dashboard Layout with nested routes */}
         <Route path="/dashboard" element={<Dashboard />}>
+        <Route path="alluser-dashboard" element={<AlluserDashboard />} />
           <Route path="pending-qa" element={<PendingQAPage />} />
           <Route path="processed-qa" element={<ProcessedQAPage />} />
           <Route path="pending-grooming" element={<GroomingPage />} />
           <Route path="import-incident" element={<ImportIncidentPage />} />
           <Route path="unassigned-incident" element={<UnassignedPage />} />
           <Route path="user-dashboard" element={<UserDashboard />} />
+          
         </Route>
       </Routes>
     </AuthProvider>

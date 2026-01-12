@@ -33,9 +33,12 @@ const Sidebar = () => {
         <NavLink to="/dashboard/unassigned-incident" activeClassName="active">
           <FaStar /> Unassigned Incident
         </NavLink>
-
+{/* 
         <NavLink to="/dashboard/user-dashboard" activeClassName="active">
           <FaStar /> User Dashboard
+        </NavLink> */}
+        <NavLink to="/dashboard/alluser-dashboard" activeClassName="active">
+          <FaStar /> Dashboard
         </NavLink>
       </nav>
     </div>

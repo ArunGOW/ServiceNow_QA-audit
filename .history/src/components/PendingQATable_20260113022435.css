@@ -1,0 +1,300 @@
+ /* Bold styled checkbox */
+.custom-checkbox input[type="checkbox"] {
+  appearance: none; /* Remove default checkbox */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  width: 15px;
+  height: 15px;
+  border: 1px solid #000000; /* Bold border */
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: all 0.2s ease-in-out;
+}
+
+
+
+
+/* Hover effect */
+.custom-checkbox input[type="checkbox"]:hover {
+  border-color: #0d6efd;
+}
+
+/* Checked state */
+.custom-checkbox input[type="checkbox"]:checked {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+
+ .info-field {
+  display: flex;
+  align-items: flex-start;
+ 
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+.info-field span:first-child {
+    /* keeps labels aligned */
+  color: #222;
+}
+
+.info-field span:last-child {
+  flex: 1;
+  color: #333;
+}
+
+.description-field span:last-child {
+  white-space: pre-wrap; /* allow multiline wrapping */
+  max-width: 100%;
+}
+
+
+.mb-25{
+  margin-bottom: 24px;
+}
+ 
+
+/* Checkmark symbol */
+.custom-checkbox input[type="checkbox"]:checked::after {
+  
+  color: #fff;
+  font-size: 14px;
+  position: absolute;
+  top: 0;
+  left: 3px;
+}
+.short-desc-cell {
+  max-width: 250px; /* Limit width to prevent overflow */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.short-desc-text {
+  display: inline-block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.qa-comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;                 /* Space between comments */
+  padding: 5px 0;
+}
+
+.qa-comment-item {
+  background: #f8f9fa;      /* Light background */
+  border-left: 4px solid #0d6efd; /* Blue bar */
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  word-wrap: break-word;     /* Prevent long text overflow */
+  white-space: normal !important; /* Fix overlap */
+  line-height: 1.3;
+}
+
+
+
+.custom-select {
+  width: 220px;
+  border: 2px solid #0d6efd;
+  border-radius: 10px !important;
+  color: #495057 !important;
+  background-color: #f8f9fa !important;
+  transition: all 0.25s ease;
+  cursor: pointer;
+  padding: 5px 10px;
+}
+
+.custom-select:hover {
+  border-color: #0a58ca;
+  box-shadow: 0 0 5px rgba(13, 110, 253, 0.4);
+  background-color: #ffffff !important;
+}
+
+.custom-select:focus {
+  border-color: #0a58ca !important;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.3) !important;
+}
+
+.custom-select option {
+  font-weight: 500 !important;
+  padding: 6px !important;
+  background-color: #ffffff;
+  color: #333;
+}
+
+.custom-select option:hover {
+  background-color: #e9ecef !important;
+}
+
+
+@media (max-width: 992px) {
+  .short-desc-cell {
+    max-width: 180px;
+  }
+}
+
+
+/* .qa-comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+} */
+
+/* .qa-comment-item {
+  white-space: wrap;         
+  overflow: hidden;          
+  text-overflow: ellipsis;    
+  font-size: 0.95rem;
+  line-height: 1.4;
+} */
+
+
+
+
+@media (max-width: 768px) {
+  .qa-comment-item {
+    white-space: normal;      /* ✅ allows wrapping on small screens */
+  }
+}
+
+.badge-pass {
+  background-color: #117A65 !important;
+  color: #fff !important;
+  font-weight: 600;
+  padding: 8px 14px;
+}
+
+.badge-fail {
+  background-color: #C0392B !important;
+  color: #fff !important;
+  font-weight: 600;
+  padding: 8px 14px;
+}
+
+.badge-na {
+  background-color: #5D6D7E !important;
+  color: #fff !important;
+  font-weight: 600;
+  padding: 8px 14px;
+}
+
+
+.dark-border-checkbox .form-check-input {
+  border: 2px solid #343a40; /* dark gray border */
+  width: 18px;               /* optional: slightly bigger */
+  height: 18px;              /* optional: slightly bigger */
+}
+
+
+.form-select:focus {
+  box-shadow: 0 0 6px rgba(13, 110, 253, 0.6); /* Bootstrap primary glow */
+  border-color: #0d6efd;
+}
+
+
+
+
+/* Container & Background */
+.premium-container {
+    background-color: #f8f9fc;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif; /* Recommended: add Inter font to your project */
+}
+
+/* Glassmorphism Header */
+.header-glass {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.07);
+}
+
+.text-gradient {
+    background: linear-gradient(45deg, #2c3e50, #4a90e2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Premium Table */
+.table-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #edf2f7;
+}
+
+.premium-table thead {
+    background-color: #fcfcfd;
+}
+
+.premium-table thead th {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+    color: black;
+    border-bottom: 1px solid #edf2f7;
+     padding bottom: 5px;
+}
+
+.premium-table tbody tr {
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.premium-table tbody tr:hover {
+    background-color: #f1f5f9 !important;
+    transform: scale(1.002);
+}
+
+/* Premium Badge */
+.badge-premium {
+    padding: 0.5em 1em;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.badge-premium.warning {
+    background-color: #fff7ed;
+    color: #c2410c;
+    border: 1px solid #fed7aa;
+}
+
+/* Premium Button */
+.premium-btn {
+    background: linear-gradient(45deg, #4f46e5, #3b82f6);
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.premium-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+/* Custom Select */
+.premium-select {
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    padding: 0.5rem 1rem;
+    transition: all 0.2s;
+}
+
+.premium-select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}

@@ -1,0 +1,81 @@
+/* Big Premium Table Header */
+.premium-table thead th {
+    background-color: #c2c3c5ff !important; /* Dark Slate Background */
+    color: #3f3333 !important;
+    font-size: 0.95rem !important;
+     /* Extra Height */
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    border: none;
+}
+
+.header-all-text {
+    font-size: 0.75rem;
+    opacity: 0.8;
+}
+
+/* Modal Enhancements */
+.modal-section {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 1px solid #e2e8f0;
+}
+
+.section-title {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: #64748b;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    display: block;
+    border-left: 4px solid #3b82f6;
+    padding-left: 10px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 15px;
+}
+
+.info-box {
+    background: #f8fafc;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    border: 1px solid #f1f5f9;
+}
+
+.full-width { grid-column: span 3; }
+
+/* Action Section - Highlighted */
+.action-section {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+}
+
+.action-section .section-title {
+    border-left-color: #10b981;
+}
+
+/* Badges */
+.qa-badge {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+.qa-badge.pass { background: #dcfce7; color: #15803d; }
+.qa-badge.fail { background: #fee2e2; color: #b91c1c; }
+
+/* Text Truncate for Description */
+.text-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 0.85rem;
+    color: #475569;
+}

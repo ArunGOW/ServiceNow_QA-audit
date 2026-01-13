@@ -751,6 +751,126 @@ const UnassignedTable = ({ incidents = [], loading, refresh }) => {
         </Modal.Footer>
       </Modal>
     </div>
+//     <div className="premium-container p-4">
+//   {/* Toast Notifications */}
+//   <ToastContainer position="top-end" className="p-3">
+//     <Toast
+//       show={toast.show}
+//       bg={toast.variant}
+//       onClose={() => setToast({ ...toast, show: false })}
+//       className="border-0 shadow-lg text-white"
+//     >
+//       <Toast.Body className="d-flex align-items-center fw-semibold">
+//         <i className="bi bi-info-circle me-2"></i> {toast.message}
+//       </Toast.Body>
+//     </Toast>
+//   </ToastContainer>
+
+//   {/* Premium Header Card */}
+//   <div className="header-glass mb-4 p-4 d-flex justify-content-between align-items-center">
+//     <div>
+//       <h4 className="fw-bold mb-0 text-gradient">Unassigned Incidents</h4>
+//       <p className="text-muted small mb-0">Manage and distribute pending tasks</p>
+//     </div>
+
+//     <div className="d-flex gap-3 align-items-center">
+//       <div className="select-wrapper">
+//         <Form.Select
+//           size="sm"
+//           value={selectedUser}
+//           onChange={(e) => setSelectedUser(e.target.value)}
+//           className="premium-select"
+//         >
+//           <option value="">-- Select QA Admin --</option>
+//           {users.map((user) => (
+//             <option key={user.sid} value={user.sid}>
+//               {user.full_name.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())}
+//             </option>
+//           ))}
+//         </Form.Select>
+//       </div>
+
+//       <Button
+//         className="premium-btn px-4"
+//         disabled={!selectedUser || selectedIncidents.length === 0}
+//         onClick={handleAssign}
+//       >
+//         <i className="bi bi-person-plus me-2"></i> Assign
+//       </Button>
+//     </div>
+//   </div>
+
+//   {/* Table Section */}
+//   <div className="table-card shadow-sm border-0">
+//     {loading ? (
+//       <div className="text-center py-5">
+//         <div className="spinner-border text-primary" role="status"></div>
+//         <p className="mt-2 text-muted">Fetching data...</p>
+//       </div>
+//     ) : (
+//       <Table hover responsive className="premium-table mb-0">
+//         <thead>
+//           <tr>
+//             <th className="ps-4">
+//               <Form.Check
+//                 type="checkbox"
+//                 className="custom-checkbox-premium"
+//                 checked={localIncidents.length > 0 && selectedIncidents.length === localIncidents.length}
+//                 onChange={handleSelectAll}
+//               />
+//             </th>
+//             <th>Incident No</th>
+//             <th>Description</th>
+//             <th>Handled On</th>
+//             <th>Handled By</th>
+//             <th className="text-end pe-4">Status</th>
+//           </tr>
+//         </thead>
+//         <tbody>
+//           {localIncidents.length > 0 ? (
+//             localIncidents.map((incident) => (
+//               <tr key={incident.sid} className="align-middle">
+//                 <td className="ps-4">
+//                   <Form.Check
+//                     type="checkbox"
+//                     className="custom-checkbox-premium"
+//                     checked={selectedIncidents.includes(incident.sid)}
+//                     onChange={() => handleSelectIncident(incident.sid)}
+//                   />
+//                 </td>
+//                 <td className="fw-bold text-primary">#{incident.incident_number}</td>
+//                 <td className="short-desc-cell">
+//                   <span className="text-truncate d-inline-block" style={{ maxWidth: "200px" }} title={incident.short_description}>
+//                     {incident.short_description || "N/A"}
+//                   </span>
+//                 </td>
+//                 <td className="text-muted small">{incident.incident_date}</td>
+//                 <td>
+//                     <div className="user-avatar-text">
+//                         {incident.assigned_analyst ? 
+//                             incident.assigned_analyst.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase()) 
+//                             : "—"}
+//                     </div>
+//                 </td>
+//                 <td className="text-end pe-4">
+//                   <span className="badge-premium warning">
+//                     {incident.resolution_status || "Unassigned"}
+//                   </span>
+//                 </td>
+//               </tr>
+//             ))
+//           ) : (
+//             <tr>
+//               <td colSpan="6" className="py-5 text-center text-muted">No unassigned incidents found.</td>
+//             </tr>
+//           )}
+//         </tbody>
+//       </Table>
+//     )}
+//   </div>
+  
+//   {/* Modal styling omitted for brevity, but CSS applies to it as well */}
+// </div>
   );
 };
 

@@ -203,3 +203,100 @@
 
 
 
+/* Container & Background */
+.premium-container {
+    background-color: #f8f9fc;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif; /* Recommended: add Inter font to your project */
+}
+
+/* Glassmorphism Header */
+.header-glass {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.07);
+}
+
+.text-gradient {
+    background: linear-gradient(45deg, #2c3e50, #4a90e2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Premium Table */
+.table-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #edf2f7;
+}
+
+.premium-table thead {
+    background-color: #fcfcfd;
+}
+
+.premium-table thead th {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+    color: black;
+    border-bottom: 1px solid #edf2f7;
+     padding bottom: 5px;
+     padding top: 5px
+
+}
+
+.premium-table tbody tr {
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.premium-table tbody tr:hover {
+    background-color: #f1f5f9 !important;
+    transform: scale(1.002);
+}
+
+/* Premium Badge */
+.badge-premium {
+    padding: 0.5em 1em;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.badge-premium.warning {
+    background-color: #fff7ed;
+    color: #c2410c;
+    border: 1px solid #fed7aa;
+}
+
+/* Premium Button */
+.premium-btn {
+    background: linear-gradient(45deg, #4f46e5, #3b82f6);
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.premium-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+/* Custom Select */
+.premium-select {
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    padding: 0.5rem 1rem;
+    transition: all 0.2s;
+}
+
+.premium-select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}

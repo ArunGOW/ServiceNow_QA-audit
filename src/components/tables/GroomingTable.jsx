@@ -6,6 +6,7 @@ import api from "../../api/axois";
 import { ToastContainer, toast } from "react-toastify";
 import logger from "../../utils/logger";
 import "../PendingQATable.css";
+import "../GrommingQATable.css";
 const GroomingTable = ({ incidents, loading, refresh }) => {
   const [selectedIncident, setSelectedIncident] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -776,6 +777,8 @@ const GroomingTable = ({ incidents, loading, refresh }) => {
 
 
     </div>
+
+ 
   );
 };
 

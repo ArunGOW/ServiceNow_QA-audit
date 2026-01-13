@@ -36,3 +36,121 @@
   border-radius: 8px;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
 }
+
+
+/* Container styling */
+.topbar-custom {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(10px);
+  
+  /* This creates the premium "Floating" feel */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 
+              0 2px 4px -1px rgba(0, 0, 0, 0.02);
+              
+  height: 55px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  transition: box-shadow 0.3s ease;
+}
+
+/* Optional: Add a stronger shadow when the user scrolls */
+.topbar-custom.scrolled {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07);
+}
+
+/* Sidebar Toggle */
+.sidebar-toggle-btn {
+  color: #4b5563;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-toggle-btn:hover {
+  background: #f3f4f6;
+  color: #2563eb;
+}
+
+/* Brand Text */
+.brand-text {
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.5px;
+  font-size: 1.25rem;
+}
+
+/* Profile Dropdown Toggle - removes the caret arrow */
+.profile-dropdown-toggle::after {
+  display: none !important;
+}
+
+.profile-dropdown-toggle {
+  background: transparent !important;
+  border: none !important;
+  padding: 0;
+}
+
+.user-info-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 5px 5px 5px 12px;
+  border-radius: 50px;
+  transition: background 0.2s;
+}
+
+.user-info-wrapper:hover {
+  background: #f9fafb;
+}
+
+/* Avatar Styling */
+.profile-img {
+  width: 38px;
+  height: 38px;
+  object-fit: cover;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px #e5e7eb;
+}
+
+.avatar-placeholder {
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: bold;
+}
+
+/* Text Meta */
+.user-text-meta {
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.2;
+}
+
+.user-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.user-role {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+/* Dropdown Menu */
+.profile-dropdown-menu {
+  border-radius: 12px;
+  overflow: hidden;
+  min-width: 220px;
+}

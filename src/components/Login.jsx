@@ -7,9 +7,7 @@ import { useAuth } from "../context/AuthContext";
 import { ToastContainer, toast } from "react-toastify";
 
 // ✅ Google OAuth Client ID
-const CLIENT_ID =
-   //"333931502051-2am83v0nue2d2rugftbel9opfjo6o5g7.apps.googleusercontent.com";// local host CD
-  "674709009669-sstgkagpem8cjc1bu9thnm0sco0j26hl.apps.googleusercontent.com";
+const CLIENT_ID = "441529980333-hj4g0d9jpk14fv9m7a9dk0fq6ieb0208.apps.googleusercontent.com";
 const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth(); // Access login function from AuthContext

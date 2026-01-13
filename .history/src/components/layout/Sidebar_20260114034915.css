@@ -1,0 +1,193 @@
+/* src/components/layout/Sidebar.css */
+.sidebar {
+  height: 870px;
+  width: 250px;
+  background-color: #2c3e97; /* Deep Blue */
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+   align-items: center;
+}
+ 
+ 
+
+.logo {
+  margin-bottom: 30px;
+}
+
+.logo-img {
+  width:100%; /* Your requested resolution */
+  height: auto;
+  object-fit: contain;
+}
+
+
+.sidebar .logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 15px;
+  text-decoration: none;
+  color: white;
+  font-size: 1rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.sidebar a:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.sidebar a.active {
+  background-color: white;
+  color: #2c3e97;
+  font-weight: bold;
+}
+
+.sidebar hr {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  margin: 15px 0;
+}
+
+
+/* Sidebar Container */
+.sidebar-container {
+  width: 260px;
+  height: 100vh;
+  background: #0f172a; /* Deep Navy Slate */
+  display: flex;
+  flex-direction: column;
+  padding: 20px 15px;
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  overflow-y: auto;
+}
+
+/* Logo Section */
+.sidebar-logo-section {
+  padding: 10px 15px 20px;
+}
+.sidebar-logo {
+  max-width: 140px;
+  filter: brightness(0) invert(1); /* Makes logo white if it's dark */
+}
+
+.sidebar-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #1e293b, transparent);
+  margin-bottom: 25px;
+}
+
+/* Nav Grouping Labels */
+.nav-group-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 1.5px;
+  padding: 0 15px 10px;
+}
+
+/* Nav Items */
+.nav-item {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #94a3b8;
+  padding: 12px 15px;
+  border-radius: 12px;
+  margin-bottom: 5px;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #f8fafc;
+}
+
+/* Icon Box Style */
+.icon-box {
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: transform 0.3s ease;
+}
+
+.nav-item:hover .icon-box {
+  transform: scale(1.2);
+  color: #3b82f6; /* Subtle blue icon hover */
+}
+
+/* ✅ Active State - Premium Glow */
+.nav-item.active {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+}
+
+.nav-item.active .icon-box {
+  color: #ffffff;
+}
+
+/* Sidebar Footer */
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 20px;
+}
+
+.user-pill {
+  background: #1e293b;
+  padding: 8px 12px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.user-avatar {
+  width: 30px;
+  height: 30px;
+  background: #3b82f6;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: bold;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+}
+
+.user-name {
+  font-size: 12px;
+  color: #cbd5e1;
+  font-weight: 600;
+}
+
+/* Scrollbar Styling for Premium feel */
+.sidebar-container::-webkit-scrollbar {
+  width: 4px;
+}
+.sidebar-container::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 10px;
+}

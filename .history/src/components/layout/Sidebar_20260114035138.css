@@ -1,0 +1,161 @@
+/* src/components/layout/Sidebar.css */
+.sidebar {
+  height: 870px;
+  width: 250px;
+  background-color: #2c3e97; /* Deep Blue */
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+   align-items: center;
+}
+ 
+ 
+
+.logo {
+  margin-bottom: 30px;
+}
+
+.logo-img {
+  width:100%; /* Your requested resolution */
+  height: auto;
+  object-fit: contain;
+}
+
+
+.sidebar .logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 15px;
+  text-decoration: none;
+  color: white;
+  font-size: 1rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.sidebar a:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.sidebar a.active {
+  background-color: white;
+  color: #2c3e97;
+  font-weight: bold;
+}
+
+.sidebar hr {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  margin: 15px 0;
+}
+
+
+/* Sidebar Main - Using your original background style */
+.sidebar {
+  width: 260px;
+  height: 100vh;
+  background-color: #2a5298; /* Reverted to your original blue */
+  padding: 20px 15px;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  color: white;
+}
+
+.logo-section {
+  text-align: center;
+  padding-bottom: 20px;
+}
+
+.logo-img {
+  max-width: 160px;
+  height: auto;
+  /* If your logo is dark, this makes it white for the blue background */
+  filter: brightness(0) invert(1); 
+}
+
+.sidebar-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 10px 0 25px 0;
+}
+
+.nav-group-label {
+  font-size: 10px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 1.2px;
+  padding-left: 15px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+/* Nav Item Styling */
+.nav-link-item {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.8);
+  padding: 12px 18px;
+  border-radius: 10px;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.25s ease;
+}
+
+.star-icon {
+  margin-right: 12px;
+  font-size: 13px;
+  transition: transform 0.2s ease;
+}
+
+/* Hover Effect */
+.nav-link-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  transform: translateX(5px);
+}
+
+.nav-link-item:hover .star-icon {
+  color: #ffcc00; /* Star turns gold on hover */
+  transform: scale(1.2);
+}
+
+/* ✅ Premium Active State */
+.nav-link-item.active {
+  background-color: #ffffff !important;
+  color: #2a5298 !important; /* Text turns to your original blue */
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.nav-link-item.active .star-icon {
+  color: #2a5298 !important;
+}
+
+/* Optional: Custom scrollbar for a clean look */
+.sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}

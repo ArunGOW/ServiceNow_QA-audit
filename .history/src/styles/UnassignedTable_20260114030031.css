@@ -1,0 +1,44 @@
+ /* High Density Styling */
+.compact-table tbody td {
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+  height: 46px; /* Optimized height for 10 rows */
+  font-size: 0.82rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.compact-table thead th {
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  font-size: 0.7rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  background-color: #f8fafc;
+}
+
+/* Premium Gradient for Banner */
+.premium-lite-banner {
+  background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+}
+
+/* Text Truncation for Descriptions */
+.truncate-1-line {
+  display: -webkit-box;
+ 
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+  max-width: 280px;
+}
+
+/* Custom Checkbox Scaling */
+.custom-check-sm .form-check-input {
+  width: 1.05rem;
+  height: 1.05rem;
+  cursor: pointer;
+}
+
+/* Row Hover */
+.compact-table tbody tr:hover {
+  background-color: #f8fbff !important;
+}

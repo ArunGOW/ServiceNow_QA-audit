@@ -1,0 +1,106 @@
+ /* Container & General Styling */
+.premium-card {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.header-icon-box {
+    width: 40px;
+    height: 40px;
+    background: rgba(13, 110, 253, 0.1);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+/* Table Styling */
+.premium-table thead th {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    padding: 1rem 0.5rem;
+    border-bottom: 2px solid #edf2f9;
+}
+
+.premium-table tbody td {
+    padding: 1rem 0.5rem;
+    vertical-align: middle;
+    font-size: 0.95rem;
+    border-bottom: 1px solid #edf2f9;
+}
+
+.incident-link {
+    font-weight: 600;
+    color: #0d6efd;
+    transition: color 0.2s;
+}
+
+.incident-link:hover {
+    color: #0a58ca;
+}
+
+/* Custom Avatar */
+.avatar-xs {
+    width: 28px;
+    height: 28px;
+    background: #e9ecef;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #495057;
+}
+
+/* Soft Badges */
+.bg-soft-primary { background-color: rgba(13, 110, 253, 0.1) !important; }
+.bg-soft-info { background-color: rgba(13, 202, 240, 0.1) !important; }
+
+/* Modal Styling */
+.section-label {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: #adb5bd;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+
+.info-grid {
+    background: #fdfdfd;
+    padding: 1.25rem;
+    border-radius: 10px;
+    border: 1px solid #eee;
+}
+
+.premium-input {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+    font-size: 0.95rem;
+}
+
+.premium-input:focus {
+    box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1);
+    border-color: #0d6efd;
+}
+
+/* Checkbox and Switches */
+.premium-checkbox .form-check-input {
+    width: 1.2em;
+    height: 1.2em;
+    cursor: pointer;
+}
+
+.premium-switch .form-check-input {
+    width: 2.5em;
+    height: 1.25em;
+    cursor: pointer;
+}

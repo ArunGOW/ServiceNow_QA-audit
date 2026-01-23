@@ -1,0 +1,251 @@
+/* src/components/layout/Sidebar.css */
+.sidebar {
+  height: 870px;
+  width: 250px;
+  background-color: #2c3e97; /* Deep Blue */
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+   align-items: center;
+}
+ 
+ 
+
+.logo {
+  margin-bottom: 30px;
+}
+
+.logo-img {
+  width:100%; /* Your requested resolution */
+  height: auto;
+  object-fit: contain;
+}
+
+
+.sidebar .logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 15px;
+  text-decoration: none;
+  color: white;
+  font-size: 1rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.sidebar a:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.sidebar a.active {
+  background-color: white;
+  color: #2c3e97;
+  font-weight: bold;
+}
+
+.sidebar hr {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  margin: 15px 0;
+}
+
+
+/* Sidebar Main - Using your original background style */
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background-color:#2c3e97; /* Reverted to your original blue */
+  padding: 20px 15px;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  color: white;
+}
+
+.logo-section {
+  text-align: center;
+  padding-bottom: 20px;
+}
+
+.logo-img {
+  max-width: 160px;
+  height: auto;
+  /* If your logo is dark, this makes it white for the blue background */
+  filter: brightness(0) invert(1); 
+}
+
+.sidebar-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 10px 0 25px 0;
+}
+
+.nav-group-label {
+  font-size: 10px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 1.2px;
+  padding-left: 15px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+/* Nav Item Styling */
+.nav-link-item {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.8);
+  padding: 12px 18px;
+  border-radius: 10px;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.25s ease;
+}
+
+.star-icon {
+  margin-right: 12px;
+  font-size: 13px;
+  transition: transform 0.2s ease;
+}
+
+/* Hover Effect */
+.nav-link-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  transform: translateX(5px);
+}
+
+.nav-link-item:hover .star-icon {
+  color: #ffcc00; /* Star turns gold on hover */
+  transform: scale(1.2);
+}
+
+/* ✅ Premium Active State */
+.nav-link-item.active {
+  background-color: #ffffff !important;
+  color: #2a5298 !important; /* Text turns to your original blue */
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.nav-link-item.active .star-icon {
+  color: #2a5298 !important;
+}
+
+/* Optional: Custom scrollbar for a clean look */
+.sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+
+/* Sidebar Container */
+.sidebar {
+  width: 260px;
+  height: 100vh;
+  /* Premium Gradient using your color #2c3e97 */
+  background: linear-gradient(180deg, #2c3e97 0%, #1a255e 100%);
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 4px 0px 15px rgba(0, 0, 0, 0.4);
+  overflow-y: hidden; /* Keep it clean */
+  transition: all 0.3s ease;
+}
+
+/* Logo Banner at the Top */
+.sidebar-header {
+  padding: 40px 20px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.05); /* Subtle glass effect over the gradient */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 10px;
+}
+
+.logo-text {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.logo-tool {
+  color: #00d4ff; /* Bright cyan accent for the '- TOOL' part */
+}
+
+/* Navigation area - Scrollable if items are many */
+.sidebar-nav {
+  flex: 1;
+  padding: 20px 15px;
+  overflow-y: auto;
+}
+
+.nav-link-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.7);
+  border-radius: 12px;
+  margin-bottom: 8px;
+  transition: all 0.25s ease;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+/* Hover Effect */
+.nav-link-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  transform: translateX(5px);
+}
+
+/* Active State - Premium Glow */
+.nav-link-item.active {
+  background: #ffffff;
+  color: #2c3e97;
+  font-weight: 700;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.nav-link-item.active .star-icon {
+  color: #2c3e97;
+}
+
+.star-icon {
+  font-size: 1.1rem;
+}
+
+/* Custom Scrollbar for Nav */
+.sidebar-nav::-webkit-scrollbar {
+  width: 4px;
+}
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}

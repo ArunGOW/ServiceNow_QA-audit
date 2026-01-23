@@ -1,0 +1,124 @@
+/* src/components/layout/Sidebar.css */
+ 
+/* Sidebar Container */
+.sidebar {
+  width: 260px;
+  height: 100vh;
+ background: linear-gradient(180deg, #2c3e97 0%, #1a255e 100%);
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 4px 0px 10px rgba(0, 0, 0, 0.3);
+  overflow-y: auto;
+  transition: all 0.3s ease;
+}
+
+/* Logo Header Design */
+.sidebar-header {
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.logo-icon {
+  font-size: 1.8rem;
+  color: #4f46e5; /* Premium Indigo */
+  filter: drop-shadow(0 0 8px rgba(79, 70, 229, 0.5));
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, #fff, #9ca3af);
+  
+  -webkit-text-fill-color: transparent;
+}
+
+.logo-dash {
+  color: #4f46e5;
+  -webkit-text-fill-color: #4f46e5;
+}
+
+.user-badge {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  background: rgba(79, 70, 229, 0.2);
+  color: #818cf8;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(79, 70, 229, 0.3);
+  font-weight: 600;
+}
+
+/* Navigation Links */
+.sidebar-nav {
+  padding: 20px 15px;
+}
+
+.nav-group {
+  margin-bottom: 25px;
+}
+
+.group-title {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin-bottom: 12px;
+  padding-left: 10px;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+}
+
+.nav-link-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 15px;
+  text-decoration: none;
+  color: #9ca3af;
+  border-radius: 10px;
+  margin-bottom: 5px;
+  transition: all 0.2s ease-in-out;
+  font-weight: 500;
+}
+
+.nav-link-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+}
+
+.nav-link-item.active {
+  background: #4f46e5;
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+}
+
+.star-icon {
+  font-size: 1.1rem;
+  opacity: 0.8;
+}
+
+.nav-link-item.active .star-icon {
+  color: #ffd700; /* Gold star when active */
+  opacity: 1;
+}
+
+/* Custom Scrollbar */
+.sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}

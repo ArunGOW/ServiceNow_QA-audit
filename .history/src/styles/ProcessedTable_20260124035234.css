@@ -1,0 +1,51 @@
+ 
+
+/* --- High Density Table Controls --- */
+
+.small-header {
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  color: #64748b !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 12px 10px !important;
+}
+
+.density-row td {
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  height: 48px; /* Standardized height */
+  border-bottom: 1px solid #f1f5f9;
+}
+
+/* --- Incident Link Styling --- */
+.incident-link-slim {
+  font-size: 13px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.incident-link-slim:hover .link-text {
+  text-decoration: underline !important;
+  text-underline-offset: 3px;
+}
+
+/* --- Badge Consistency --- */
+.badge-slim {
+  background: #f1f5f9;
+  color: #475569;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid #e2e8f0;
+  display: inline-block;
+}
+
+/* --- Processed Table Status Badges --- */
+.bg-success-subtle { background-color: #dcfce7 !important; }
+.bg-danger-subtle { background-color: #fee2e2 !important; }
+
+/* Modal & Selection styles */
+.cursor-pointer { cursor: pointer; }

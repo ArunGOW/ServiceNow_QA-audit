@@ -1,0 +1,146 @@
+ /* src/components/layout/Sidebar.css */
+
+/* Main Container */
+.sidebar {
+  width: 260px;
+  height: 100vh;
+  /* Premium Gradient using your Deep Blue #2c3e97 */
+  background: linear-gradient(180deg, #2c3e97 0%, #1a255e 100%);
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  box-shadow: 4px 0px 15px rgba(0, 0, 0, 0.3);
+  overflow-y: auto;
+  transition: all 0.3s ease;
+}
+
+/* Custom Scrollbar for a clean look */
+.sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+.sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+/* Header & Logo Section */
+.sidebar-header {
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.logo-icon {
+  font-size: 1.8rem;
+  color: #4f46e5; /* Premium Indigo */
+  filter: drop-shadow(0 0 8px rgba(79, 70, 229, 0.5));
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, #fff, #9ca3af);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.logo-dash {
+  color: #4f46e5;
+  -webkit-text-fill-color: #4f46e5 !important;
+}
+
+.user-badge {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  background: rgba(79, 70, 229, 0.2);
+  color: #818cf8;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(79, 70, 229, 0.3);
+  font-weight: 600;
+}
+
+/* Navigation Layout */
+.sidebar-nav {
+  padding: 20px 15px;
+  flex-grow: 1;
+}
+
+.nav-group {
+  margin-bottom: 25px;
+}
+
+.group-title {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 12px;
+  padding-left: 10px;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+}
+
+/* Nav Item Styling */
+.nav-link-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.25s ease-in-out;
+}
+
+.star-icon {
+  font-size: 1.1rem;
+  opacity: 0.8;
+  transition: transform 0.2s ease;
+}
+
+/* Hover State */
+.nav-link-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  transform: translateX(5px);
+}
+
+.nav-link-item:hover .star-icon {
+  color: #ffd700; /* Star turns gold on hover */
+  transform: scale(1.2);
+}
+
+/* ✅ Active State */
+.nav-link-item.active {
+  background-color:  #4f46e5 !important;
+  color: #2c3e97 !important; /* Text turns to your Deep Blue */
+  font-weight: 700;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.nav-link-item.active .star-icon {
+  color: #2c3e97 !important; /* Icon matches blue text */
+  opacity: 1;
+}
+
+.sidebar-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 10px 0;
+}

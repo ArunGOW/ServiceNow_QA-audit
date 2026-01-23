@@ -1,0 +1,103 @@
+//  // src/components/layout/Sidebar.jsx
+// import { NavLink } from "react-router-dom";
+// import { FaStar } from "react-icons/fa";
+// import "./Sidebar.css";
+// import logo from "../../assets/download.png"; // Company logo
+
+// const Sidebar = () => {
+//   return (
+//     <div className="sidebar">
+//       {/* Logo Section */}
+//       {/* <div className="logo">
+//         <img src={logo} alt="eServeCloudSolutions Logo" className="logo-img" />
+//       </div> */}
+
+//       {/* Navigation Links */}
+//       <nav>
+//         <NavLink to="/dashboard/pending-qa" activeClassName="active">
+//           <FaStar /> My Pending QA
+//         </NavLink>
+
+//         <NavLink to="/dashboard/processed-qa" activeClassName="active">
+//           <FaStar /> Processed QA
+//         </NavLink>
+
+//         <NavLink to="/dashboard/pending-grooming" activeClassName="active">
+//           <FaStar /> Pending Grooming
+//         </NavLink>
+
+//         <NavLink to="/dashboard/import-incident" activeClassName="active">
+//           <FaStar /> Import Incident
+//         </NavLink>
+
+//         <NavLink to="/dashboard/unassigned-incident" activeClassName="active">
+//           <FaStar /> Unassigned Incident
+//         </NavLink>
+// {/* 
+//         <NavLink to="/dashboard/user-dashboard" activeClassName="active">
+//           <FaStar /> User Dashboard
+//         </NavLink> */}
+//         <NavLink to="/dashboard/alluser-dashboard" activeClassName="active">
+//           <FaStar /> Dashboard
+//         </NavLink>
+//       </nav>
+//     </div>
+//   );
+// };
+
+// export default Sidebar;
+
+     // premium design add code 
+
+
+// src/components/layout/Sidebar.jsx
+import { NavLink } from "react-router-dom";
+import { FaStar } from "react-icons/fa";
+import "./Sidebar.css";
+import logo from "../../assets/download.png"; 
+
+const Sidebar = () => {
+  return (
+    <div className="sidebar">
+      {/* Logo Section */}
+      {/* <div className="logo-section">
+        <img src={logo} alt="eServeCloudSolutions Logo" className="logo-img" />
+      </div> */}
+
+      <div className="sidebar-divider"></div>
+
+      {/* Navigation Links */}
+      <nav className="sidebar-nav">
+         
+        
+        <NavLink to="/dashboard/pending-qa" className={({ isActive }) => isActive ? "nav-link-item active" : "nav-link-item"}>
+          <FaStar className="star-icon" /> <span>My Pending QA</span>
+        </NavLink>
+
+        <NavLink to="/dashboard/processed-qa" className={({ isActive }) => isActive ? "nav-link-item active" : "nav-link-item"}>
+          <FaStar className="star-icon" /> <span>Processed QA</span>
+        </NavLink>
+
+        <NavLink to="/dashboard/pending-grooming" className={({ isActive }) => isActive ? "nav-link-item active" : "nav-link-item"}>
+          <FaStar className="star-icon" /> <span>Pending Grooming</span>
+        </NavLink>
+
+         
+
+        <NavLink to="/dashboard/import-incident" className={({ isActive }) => isActive ? "nav-link-item active" : "nav-link-item"}>
+          <FaStar className="star-icon" /> <span>Import Incident</span>
+        </NavLink>
+
+        <NavLink to="/dashboard/unassigned-incident" className={({ isActive }) => isActive ? "nav-link-item active" : "nav-link-item"}>
+          <FaStar className="star-icon" /> <span>Unassigned Incident</span>
+        </NavLink>
+
+        <NavLink to="/dashboard/alluser-dashboard" className={({ isActive }) => isActive ? "nav-link-item active" : "nav-link-item"}>
+          <FaStar className="star-icon" /> <span>Dashboard</span>
+        </NavLink>
+      </nav>
+    </div>
+  );
+};
+
+export default Sidebar;

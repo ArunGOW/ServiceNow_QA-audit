@@ -9,7 +9,23 @@ const Sidebar = () => {
   if (!user) return null;
 
   const menu = [
-     {
+    {
+      title: "General",
+      roles: [ROLES.ADMIN, ROLES.AGENT],
+      items: [
+       
+        {
+          label: "Update Incident",
+          path: "/dashboard/update-incident",
+        },
+         {
+          label: "Pending Incident",
+          path: "/dashboard/pending-incident",
+          roles: [ROLES.AGENT],
+        },
+      ],
+    },
+    {
       title: "Management",
       roles: [ROLES.ADMIN],
       items: [
@@ -36,26 +52,6 @@ const Sidebar = () => {
         {
           label: "Unassigned Incident",
           path: "/dashboard/unassigned-incident",
-        },
-      ],
-    },
-    {
-      title: "General",
-      roles: [ROLES.ADMIN, ROLES.AGENT],
-      items: [
-       {
-        label:"Dashboard",
-        path:"/dashboard/user-dashboard",
-        roles: [ROLES.AGENT],
-       },
-        {
-          label: "Update Incident",
-          path: "/dashboard/update-incident",
-        },
-         {
-          label: "Pending Incident",
-          path: "/dashboard/pending-incident",
-          roles: [ROLES.AGENT],
         },
       ],
     },

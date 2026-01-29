@@ -9,14 +9,29 @@ const Sidebar = () => {
   if (!user) return null;
 
   const menu = [
-     {
-      title: "Management",
-      roles: [ROLES.ADMIN],
+    {
+      title: "General",
+      roles: [ROLES.ADMIN, ROLES.AGENT],
       items: [
-         {
+        {
           label: "Dashboard",
           path: "/dashboard/alluser-dashboard",
         },
+        {
+          label: "Update Incident",
+          path: "/dashboard/update-incident",
+        },
+         {
+          label: "Pending Incident",
+          path: "/dashboard/pending-incident",
+          roles: [ROLES.AGENT],
+        },
+      ],
+    },
+    {
+      title: "Management",
+      roles: [ROLES.ADMIN],
+      items: [
         {
           label: "My Pending QA",
           path: "/dashboard/pending-qa",
@@ -36,26 +51,6 @@ const Sidebar = () => {
         {
           label: "Unassigned Incident",
           path: "/dashboard/unassigned-incident",
-        },
-      ],
-    },
-    {
-      title: "General",
-      roles: [ROLES.ADMIN, ROLES.AGENT],
-      items: [
-       {
-        label:"Dashboard",
-        path:"/dashboard/user-dashboard",
-        roles: [ROLES.AGENT],
-       },
-        {
-          label: "Update Incident",
-          path: "/dashboard/update-incident",
-        },
-         {
-          label: "Pending Incident",
-          path: "/dashboard/pending-incident",
-          roles: [ROLES.AGENT],
         },
       ],
     },
@@ -82,26 +77,20 @@ const Sidebar = () => {
               <div className="nav-group" key={group.title}>
                 <p className="group-title">{group.title}</p>
 
-               {group.items
-  .filter(
-    (item) =>
-      !item.roles || item.roles.includes(user.user_type)
-  )
-  .map((item) => (
-    <NavLink
-      key={item.path}
-      to={item.path}
-      className={({ isActive }) =>
-        isActive
-          ? "nav-link-item active"
-          : "nav-link-item"
-      }
-    >
-      <FaStar className="star-icon" />
-      <span>{item.label}</span>
-    </NavLink>
-))}
-
+                {group.items.map((item) => (
+                  <NavLink
+                    key={item.path}
+                    to={item.path}
+                    className={({ isActive }) =>
+                      isActive
+                        ? "nav-link-item active"
+                        : "nav-link-item"
+                    }
+                  >
+                    <FaStar className="star-icon" />
+                    <span>{item.label}</span>
+                  </NavLink>
+                ))}
               </div>
             )
         )}

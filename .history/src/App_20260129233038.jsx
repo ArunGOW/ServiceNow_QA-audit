@@ -1,4 +1,4 @@
-import React from "react";
+ import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import RoleProtectedRoute from "./components/RoleProtectedRoute";
@@ -38,22 +38,13 @@ function App() {
               />
             }
           >
-
-
-            <Route path="update-incident" element={<UpdateIncident />} />
-
-          </Route>
-
-          <Route
-            element={
-              <RoleProtectedRoute allowedRoles={[ROLES.AGENT]} />
-            }
-          >
             <Route
-              path="pending-incident"
-              element={<PendingIncidentsTab />}
+              path="alluser-dashboard"
+              element={<AlluserDashboard />}
             />
             <Route path="user-dashboard" element={<UserDashboard />} />
+            <Route path="update-incident" element={<UpdateIncident />} />
+            <Route path="pending-incident" element={<PendingIncidentsTab />} />
           </Route>
 
           {/* 🔐 ADMIN ONLY ROUTES */}
@@ -62,10 +53,6 @@ function App() {
               <RoleProtectedRoute allowedRoles={[ROLES.ADMIN]} />
             }
           >
-            <Route
-              path="alluser-dashboard"
-              element={<AlluserDashboard />}
-            />
             <Route path="pending-qa" element={<PendingQAPage />} />
             <Route
               path="processed-qa"
@@ -79,7 +66,6 @@ function App() {
               path="import-incident"
               element={<ImportIncidentPage />}
             />
-            <Route path="update-incident" element={<UpdateIncident />} />
             <Route
               path="unassigned-incident"
               element={<UnassignedPage />}

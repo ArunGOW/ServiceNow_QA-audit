@@ -1759,16 +1759,16 @@ const UpdateIncident = () => {
       <div style={styles.mainGrid}>
         <div style={styles.formSection}>
          <div className="premium-banner">
-             <div className="d-flex align-items-center gap-3">
-               <div style={styles.bannerIconBox}>
-                 <i className="bi bi-lightning-charge-fill"></i>
-               </div>
-               <div>
-                 <h5 className="m-0 fw-bold">Incident Portal</h5>
-                 <p className="m-0 small opacity-75">Sync real-time updates to the active dashboard</p>
-              </div>
-            </div>
-         </div>
+//             <div className="d-flex align-items-center gap-3">
+//               <div style={styles.bannerIconBox}>
+//                 <i className="bi bi-lightning-charge-fill"></i>
+//               </div>
+//               <div>
+//                 <h5 className="m-0 fw-bold">Incident Portal</h5>
+//                 <p className="m-0 small opacity-75">Sync real-time updates to the active dashboard</p>
+//               </div>
+//             </div>
+//           </div>
 
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h4 className="m-0 fw-bold">Update <span style={{ color: '#4f46e5' }}>Incident</span></h4>

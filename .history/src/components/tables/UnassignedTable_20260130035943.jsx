@@ -761,7 +761,7 @@ const UnassignedTable = ({ incidents = [], loading, refresh }) => {
 
     // Premium style code
 
-  <div className="bg-white rounded-4 shadow-sm border   position-relative">
+  <div className="bg-white rounded-4 shadow-sm border overflow-hidden position-relative">
   {/* Toast Notifications */}
   <ToastContainer position="top-end" className="p-3">
     <Toast

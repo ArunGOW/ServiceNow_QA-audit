@@ -1703,8 +1703,8 @@ const UpdateIncident = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!formData.status || !formData.done_by || !formData.incident_number) {
-      setFeedback({ type: 'danger', message: "Incident ID, Analyst, and Status are mandatory." });
+    if (!formData.status || !formData.done_by || !formData.incident_number || !formData.short_description || !formData.user || !formData.resolution_shared) {
+      setFeedback({ type: 'danger', message: "Please fill all mandatory fields marked with *" });
       return;
     }
 
@@ -1726,13 +1726,17 @@ const UpdateIncident = () => {
       const filteredHistory = recentIncidents.filter(inc => inc.incident_number !== formData.incident_number);
       setRecentIncidents([newEntry, ...filteredHistory].slice(0, 10));
       
+      // ✅ Feedback only triggers here, after success
       setFeedback({ type: 'success', message: "Incident Synced Successfully!" });
       setFormData(initialFormState);
 
-      setTimeout(() => setFeedback(null), 4000);
+      // ✅ Auto-hide message after 4 seconds
+      setTimeout(() => {
+        setFeedback(null);
+      }, 4000);
 
     } catch (err) {
-      setFeedback({ type: 'danger', message: "Failed to Sync. Please check connection." });
+      setFeedback({ type: 'danger', message: "Failed to Sync. Please check your connection." });
     } finally {
       setLoading(false);
     }
@@ -1746,6 +1750,7 @@ const UpdateIncident = () => {
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .menu-item:hover { background-color: #f8fafc !important; transform: translateX(5px); }
+        .history-card:hover .edit-btn { opacity: 1 !important; visibility: visible !important; }
         .premium-banner {
           background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
           border-radius: 16px;
@@ -1758,17 +1763,15 @@ const UpdateIncident = () => {
       
       <div style={styles.mainGrid}>
         <div style={styles.formSection}>
-         <div className="premium-banner">
-             <div className="d-flex align-items-center gap-3">
-               <div style={styles.bannerIconBox}>
-                 <i className="bi bi-lightning-charge-fill"></i>
-               </div>
-               <div>
-                 <h5 className="m-0 fw-bold">Incident Portal</h5>
-                 <p className="m-0 small opacity-75">Sync real-time updates to the active dashboard</p>
+          <div className="premium-banner">
+            <div className="d-flex align-items-center gap-3">
+              <div style={styles.bannerIconBox}><i className="bi bi-shield-check"></i></div>
+              <div>
+                <h5 className="m-0 fw-bold">Incident Portal</h5>
+                <p className="m-0 small opacity-75">Fill all required fields to sync data</p>
               </div>
             </div>
-         </div>
+          </div>
 
           <div className="d-flex justify-content-between align-items-center mb-3">
             <h4 className="m-0 fw-bold">Update <span style={{ color: '#4f46e5' }}>Incident</span></h4>
@@ -1842,13 +1845,10 @@ const UpdateIncident = () => {
 
               <Col md={12}><Form.Label style={styles.label}>Description *</Form.Label><Form.Control value={formData.short_description} placeholder="Short summary" style={styles.input} onChange={(e) => setFormData({...formData, short_description: e.target.value})} required /></Col>
               
-              {/* ✅ SHOW ONLY WHEN ESCALATED IS SELECTED */}
-              {formData.status === 'escalated' && (
-                <Col md={12}>
-                  <Form.Label style={{...styles.label, color: '#f43f5e'}}>Escalation Notes *</Form.Label>
-                  <Form.Control as="textarea" rows={1} placeholder="Why is this being escalated?" style={{...styles.textarea, borderColor: '#fecaca'}} value={formData.escalated_notes} onChange={(e) => setFormData({...formData, escalated_notes: e.target.value})} required />
-                </Col>
-              )}
+              <Col md={12}>
+                <Form.Label style={{...styles.label, color: formData.status === 'escalated' ? '#f43f5e' : '#94a3b8'}}>Escalation Notes {formData.status === 'escalated' && '*'}</Form.Label>
+                <Form.Control as="textarea" rows={1} style={{...styles.textarea, borderColor: formData.status === 'escalated' ? '#fecaca' : '#e2e8f0'}} value={formData.escalated_notes} onChange={(e) => setFormData({...formData, escalated_notes: e.target.value})} required={formData.status === 'escalated'} />
+              </Col>
 
               <Col md={12}><Form.Label style={styles.label}>Resolution Summary *</Form.Label><Form.Control as="textarea" rows={1} value={formData.resolution_shared} style={styles.input} onChange={(e) => setFormData({...formData, resolution_shared: e.target.value})} required /></Col>
             </Row>
@@ -1869,13 +1869,12 @@ const UpdateIncident = () => {
         <div style={styles.previewSection} className="custom-scrollbar">
           <div style={styles.previewHeader}><div style={styles.liveDot}></div> HISTORY LOG</div>
           {recentIncidents.map((inc, i) => (
-            <div key={i} style={styles.historyCard}>
+            <div key={i} style={styles.historyCard} className="history-card">
               <div className="d-flex justify-content-between align-items-center">
                 <span style={{fontSize: '11px', fontWeight: 800, color: '#ffffff'}}>{inc.incident_number}</span>
                 <div className="d-flex align-items-center gap-2">
-                   {/* ✅ EDIT ICON ALWAYS VISIBLE */}
-                   <Button variant="link" className="p-0 text-info" onClick={() => handleEdit(inc)}>
-                      <i className="bi bi-pencil-square" style={{fontSize: '0.9rem'}}></i>
+                   <Button variant="link" className="edit-btn p-0 text-info" style={{visibility: 'hidden', opacity: 0, transition: '0.2s'}} onClick={() => handleEdit(inc)}>
+                      <i className="bi bi-pencil-fill"></i>
                    </Button>
                    <span style={{fontSize: '9px', background: inc.status === 'resolved' ? '#064e3b' : '#451a03', color: inc.status === 'resolved' ? '#10b981' : '#f59e0b', padding: '2px 6px', borderRadius: '4px'}}>
                     {inc.status.toUpperCase()}
@@ -1890,7 +1889,7 @@ const UpdateIncident = () => {
 
       <Modal show={showClearModal} onHide={() => setShowClearModal(false)} centered size="sm">
         <Modal.Body className="text-center p-4">
-          <p className="fw-bold mb-4">Clear session history?</p>
+          <p className="fw-bold mb-4">Clear log history?</p>
           <div className="d-flex gap-2">
             <Button variant="light" size="sm" className="flex-grow-1" onClick={() => setShowClearModal(false)}>No</Button>
             <Button variant="danger" size="sm" className="flex-grow-1" onClick={() => { setRecentIncidents([]); setShowClearModal(false); }}>Yes, Clear</Button>

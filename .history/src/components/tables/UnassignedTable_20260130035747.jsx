@@ -761,7 +761,7 @@ const UnassignedTable = ({ incidents = [], loading, refresh }) => {
 
     // Premium style code
 
-  <div className="bg-white rounded-4 shadow-sm border   position-relative">
+  <div className="bg-white rounded-4 shadow-sm border overflow-hidden position-relative">
   {/* Toast Notifications */}
   <ToastContainer position="top-end" className="p-3">
     <Toast
@@ -804,78 +804,98 @@ const UnassignedTable = ({ incidents = [], loading, refresh }) => {
             </option>
           ))}
         </Form.Select> */}
-       <Dropdown
-  onSelect={(val) => setSelectedUser(val)}
-  className="d-inline-block"
-  renderMenuOnMount
->
-  <Dropdown.Toggle
-    variant="none"
+        <Dropdown onSelect={(val) => setSelectedUser(val)} className="d-inline-block">
+  <Dropdown.Toggle 
+    variant="none" 
     id="dropdown-basic"
     className="border-0 bg-white shadow-sm d-flex align-items-center justify-content-between px-3 py-2"
-    style={{
-      width: "200px",
-      fontSize: "0.85rem",
-      borderRadius: "10px",
-      fontWeight: "600",
-      color: "#495057",
-      transition: "all 0.2s ease",
+    style={{ 
+      width: "200px", 
+      fontSize: '0.85rem', 
+      borderRadius: '10px',
+      fontWeight: '600',
+      color: '#495057',
+      transition: 'all 0.2s ease'
     }}
   >
-    {selectedUser
-      ? users.find((u) => u.sid === selectedUser)?.full_name
-          .toLowerCase()
-          .replace(/\b\w/g, (c) => c.toUpperCase())
+    {/* Display selected name or placeholder */}
+    {selectedUser 
+      ? users.find(u => u.sid === selectedUser)?.full_name.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())
       : "Select QA Admin"}
   </Dropdown.Toggle>
 
-  <Dropdown.Menu
-    style={{
-      borderRadius: "12px",
-      border: "none",
-      boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
-      padding: "8px",
-      minWidth: "200px",
+  <Dropdown.Menu 
+    style={{ 
+      borderRadius: '12px', 
+      border: 'none', 
+      boxShadow: '0 10px 25px rgba(0,0,0,0.1)', 
+      padding: '8px',
+      minWidth: '200px'
     }}
-    container="body" // ✅ This is the key change
   >
-    <Dropdown.Header
-      style={{
-        fontSize: "0.7rem",
-        textTransform: "uppercase",
-        letterSpacing: "1px",
-      }}
-    >
+    <Dropdown.Header style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
       Available Admins
     </Dropdown.Header>
-
+    
     {users.map((user) => (
-      <Dropdown.Item
-        key={user.sid}
+      <Dropdown 
+  onSelect={(val) => setSelectedUser(val)} 
+  className="d-inline-block"
+  renderMenuOnMount
+>
+  <Dropdown.Toggle 
+    variant="none" 
+    id="dropdown-basic"
+    className="border-0 bg-white shadow-sm d-flex align-items-center justify-content-between px-3 py-2"
+    style={{ 
+      width: "200px", 
+      fontSize: '0.85rem', 
+      borderRadius: '10px',
+      fontWeight: '600',
+      color: '#495057',
+      transition: 'all 0.2s ease'
+    }}
+  >
+    {selectedUser 
+      ? users.find(u => u.sid === selectedUser)?.full_name.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())
+      : "Select QA Admin"}
+  </Dropdown.Toggle>
+
+  <Dropdown.Menu 
+    style={{ 
+      borderRadius: '12px', 
+      border: 'none', 
+      boxShadow: '0 10px 25px rgba(0,0,0,0.1)', 
+      padding: '8px',
+      minWidth: '200px'
+    }}
+    renderMenuOnMount
+  >
+    <Dropdown.Header style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
+      Available Admins
+    </Dropdown.Header>
+    
+    {users.map((user) => (
+      <Dropdown.Item 
+        key={user.sid} 
         eventKey={user.sid}
         className="rounded-2 py-2 mb-1"
-        style={{ fontSize: "0.85rem" }}
+        style={{ fontSize: '0.85rem' }}
       >
         <div className="d-flex align-items-center">
-          <span
-            className="me-2 d-flex align-items-center justify-content-center bg-light text-primary rounded-circle"
-            style={{
-              width: "24px",
-              height: "24px",
-              fontSize: "0.65rem",
-            }}
-          >
+          <span className="me-2 d-flex align-items-center justify-content-center bg-light text-primary rounded-circle" style={{ width: '24px', height: '24px', fontSize: '0.65rem' }}>
             {user.full_name.charAt(0).toUpperCase()}
           </span>
-          {user.full_name
-            .toLowerCase()
-            .replace(/\b\w/g, (c) => c.toUpperCase())}
+          {user.full_name.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())}
         </div>
       </Dropdown.Item>
     ))}
   </Dropdown.Menu>
 </Dropdown>
 
+    ))}
+  </Dropdown.Menu>
+</Dropdown>
         <Button
           size="sm"
           variant="primary"

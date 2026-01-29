@@ -56,4 +56,6 @@
     color: #adb5bd; /* Subtle arrow color */
 }
 
- 
+.dropdown-menu {
+  position: fixed !important;
+}

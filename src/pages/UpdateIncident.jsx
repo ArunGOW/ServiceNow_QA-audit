@@ -1056,7 +1056,7 @@ const UpdateIncident = () => {
     const fetchUsers = async () => {
       try {
         const token = currentUser?.token || localStorage.getItem("session_token");
-        const res = await api.get('http://52.56.78.188:8010/api/users/get/list_users', {
+        const res = await api.get('/users/get/list_users', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setUserList(res.data || []);

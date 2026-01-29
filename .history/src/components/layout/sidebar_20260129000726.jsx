@@ -57,7 +57,7 @@ const Sidebar = () => {
         <div className="logo-container">
           <FaShieldAlt className="logo-icon" />
           <span className="logo-text">
-            QA<span className="logo-dash">-</span>Manager
+            QA<span className="logo-dash">-</span>TOOL
           </span>
         </div>
         <div className="user-badge">

@@ -866,9 +866,8 @@ const selectedUserName = userList.find(u => u.sid === selectedAgent)?.full_name 
       <th style={styles.th}>Resolution</th>
     </tr>
   </thead>
- <tbody>
-  {pendingIncidents.length > 0 ? (
-    pendingIncidents.map((incident, i) => (
+  <tbody>
+    {pendingIncidents.map((incident, i) => (
       <tr key={i} style={styles.tr}>
         <td style={styles.td}>
           <span style={{ fontWeight: '700', color: '#4f46e5' }}>
@@ -899,24 +898,8 @@ const selectedUserName = userList.find(u => u.sid === selectedAgent)?.full_name 
           </span>
         </td>
       </tr>
-    ))
-  ) : (
-    // ✅ This is the "No Data Found" message
-    <tr>
-      <td colSpan="4" style={{ padding: '40px 0', textAlign: 'center' }}>
-        <div style={styles.noDataWrapper}>
-          <i className={`bi ${selectedOption.icon}`} style={{ fontSize: '24px', color: '#cbd5e1', marginBottom: '10px', display: 'block' }}></i>
-          <p style={{ margin: 0, fontWeight: '700', color: '#64748b', fontSize: '14px' }}>
-            No data found in <span style={{ color: selectedOption.color }}>{selectedOption.label}</span>
-          </p>
-          <p style={{ margin: 0, fontSize: '12px', color: '#94a3b8' }}>
-            There are currently no incidents recorded for this status.
-          </p>
-        </div>
-      </td>
-    </tr>
-  )}
-</tbody>
+    ))}
+  </tbody>
 </table>
 
                 {/* ✅ Premium Pagination */}
@@ -1103,8 +1086,8 @@ premiumFilterWrapper: {
   scrollableMenu: {
     position: 'absolute',
     top: '120%',
-    left: '-20px',
-    width: '200px',
+    left: '0',
+    width: '220px',
     maxHeight: '300px', // Limit height for long user lists
     overflowY: 'auto',
     background: 'rgba(255, 255, 255, 0.95)',
@@ -1128,17 +1111,6 @@ premiumFilterWrapper: {
     cursor: 'pointer',
     boxShadow: '0 2px 5px rgba(0,0,0,0.02)',
   },
-  noDataWrapper: {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: '20px',
-  background: '#f8fafc',
-  borderRadius: '12px',
-  border: '2px dashed #e2e8f0',
-  animation: 'fadeInUp 0.3s ease-out'
-},
 resetBtn: { background: 'none', border: 'none', color: '#ef4444', fontSize: '14px', cursor: 'pointer', fontWeight: '600' },
   kpiRow: { display: 'flex', backgroundColor: '#fff', borderRadius: '10px', marginBottom: '12px', padding: '30px 0', boxShadow: '0 1px 2px rgba(0,0,0,0.02)' },
   metricBox: { flex: 1, padding: '0 18px', display: 'flex', flexDirection: 'column', gap: '2px' },

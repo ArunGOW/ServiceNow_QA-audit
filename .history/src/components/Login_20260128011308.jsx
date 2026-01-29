@@ -323,10 +323,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { ToastContainer, toast } from "react-toastify";
 
-const CLIENT_ID ="441529980333-hj4g0d9jpk14fv9m7a9dk0fq6ieb0208.apps.googleusercontent.com";
- 
- // "333931502051-2am83v0nue2d2rugftbel9opfjo6o5g7.apps.googleusercontent.com"; local host code
-
+const CLIENT_ID ="333931502051-2am83v0nue2d2rugftbel9opfjo6o5g7.apps.googleusercontent.com";
+  //"441529980333-hj4g0d9jpk14fv9m7a9dk0fq6ieb0208.apps.googleusercontent.com"
 
 const Login = () => {
   const navigate = useNavigate();
@@ -343,9 +341,10 @@ const Login = () => {
   }, []);
 
  
- useEffect(() => {
+ // 🔁 Prevent logged-in users from visiting /login
+useEffect(() => {
   if (user) {
-    // If user exists (regardless of role), send them to the dashboard
+    // Both roles now go to the same place
     navigate("/dashboard/alluser-dashboard");
   }
 }, [user, navigate]);
@@ -377,13 +376,14 @@ const Login = () => {
           const loggedInUser = await login(email, name, picture);
 
           if (loggedInUser) {
-  toast.success(`Welcome ${name || email}!`);
-  
-  // Navigate to the dashboard for ANY valid logged-in user
-  navigate("/dashboard/alluser-dashboard");
-} else {
-  toast.error("Unauthorized user!");
-}
+            toast.success(`Welcome ${name || email}!`);
+
+            if (loggedInUser.user_type === "qa_admin") {
+              navigate("/dashboard/alluser-dashboard");
+            } 
+          } else {
+            toast.error("Unauthorized user!");
+          }
         } catch (err) {
           console.error(err);
           toast.error("Google login failed.");

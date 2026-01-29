@@ -525,30 +525,12 @@ const AllusersDashboard = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isUserOpen, setIsUserOpen] = useState(false);
 
   // ✅ New States for Pending Incidents
   const [pendingIncidents, setPendingIncidents] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPending, setTotalPending] = useState(0);
   const perPage = 10;
-
-  const [isOpen, setIsOpen] = useState(false);
-
-const options = [
-  { id: '', label: 'All Incidents', color: '#4f46e5', icon: 'bi-grid-fill' },
-  { id: 'resolved', label: 'Resolved', color: '#10b981', icon: 'bi-check-circle-fill' },
-  { id: 'escalated', label: 'Escalated', color: '#f43f5e', icon: 'bi-fire' },
-  { id: 'in progress', label: 'In Progress', color: '#f59e0b', icon: 'bi-clock-history' },
-  { id: 'on hold', label: 'On Hold', color: '#64748b', icon: 'bi-pause-circle-fill' },
-];
-
-const selectedOption = options.find(opt => opt.id === statusFilter) || options[0];
-
-
-
-// Find the label of the currently selected user
-const selectedUserName = userList.find(u => u.sid === selectedAgent)?.full_name || "Select Analyst";
 
   // 1. Fetch User List
   useEffect(() => {
@@ -671,143 +653,34 @@ const selectedUserName = userList.find(u => u.sid === selectedAgent)?.full_name 
 
         {/* ✅ Dynamic Filter Strip */}
         <div style={styles.filterStrip}>
-           {activeTab === 'individual' && (
-  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-    
-    {/* --- Premium Analyst Dropdown --- */}
-    <div style={styles.dropdownContainer}>
-      <div 
-        style={{
-          ...styles.premiumButton, 
-          borderColor: isUserOpen ? '#4f46e5' : '#d1d5db',
-          background: 'linear-gradient(145deg, #ffffff, #f9fafb)'
-        }}
-        onClick={() => setIsUserOpen(!isUserOpen)}
-      >
-        <div style={{ ...styles.statusDot, backgroundColor: '#6366f1' }} />
-        <span style={styles.selectedText}>{selectedUserName}</span>
-        <i className={`bi bi-chevron-${isUserOpen ? 'up' : 'down'}`} style={{ color: '#64748b', fontSize: '11px' }}></i>
-      </div>
-
-      {isUserOpen && (
-        <div style={styles.scrollableMenu}>
-          {userList.map((u) => (
-            <div 
-              key={u.sid}
-              style={{
-                ...styles.menuItem,
-                background: selectedAgent === u.sid ? '#f0f4ff' : 'transparent',
-                color: selectedAgent === u.sid ? '#4f46e5' : '#475569'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = selectedAgent === u.sid ? '#e0e7ff' : '#f1f5f9';
-                e.currentTarget.style.transform = 'translateX(4px)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = selectedAgent === u.sid ? '#f0f4ff' : 'transparent';
-                e.currentTarget.style.transform = 'translateX(0px)';
-              }}
-              onClick={() => {
-                setSelectedAgent(u.sid);
-                setIsUserOpen(false);
-              }}
-            >
-              <div style={{
-                width: '24px', height: '24px', borderRadius: '6px', background: '#e0e7ff', 
-                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: '800'
-              }}>
-                {u.full_name.charAt(0)}
-              </div>
-              {u.full_name}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-
-    {/* --- Premium Date Inputs --- */}
-    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-      <input 
-        type="date" 
-        style={styles.premiumDateInput} 
-        value={fromDate} 
-        onChange={(e) => setFromDate(e.target.value)}
-        onFocus={(e) => e.target.style.borderColor = '#4f46e5'}
-        onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
-      />
-      <span style={{ color: '#94a3b8', fontWeight: '800', fontSize: '10px' }}>TO</span>
-      <input 
-        type="date" 
-        style={styles.premiumDateInput} 
-        value={toDate} 
-        onChange={(e) => setToDate(e.target.value)} 
-        onFocus={(e) => e.target.style.borderColor = '#4f46e5'}
-        onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
-      />
-    </div>
-
-    {/* --- Reset Button --- */}
-    <button 
-      style={{
-        ...styles.resetBtn,
-        padding: '8px 12px',
-        borderRadius: '10px',
-        fontSize: '13px',
-        transition: 'all 0.2s'
-      }} 
-      onMouseEnter={(e) => e.target.style.color = '#b91c1c'}
-      onMouseLeave={(e) => e.target.style.color = '#ef4444'}
-      onClick={() => { setFromDate(''); setToDate(''); }}
-    >
-      <i className="bi bi-arrow-counterclockwise"></i> Reset
-    </button>
-  </div>
-)}
+          {activeTab === 'individual' && (
+            <>
+              <select style={styles.inputSlim} value={selectedAgent} onChange={(e) => setSelectedAgent(e.target.value)}>
+                {userList.map(u => <option key={u.sid} value={u.sid}>{u.full_name}</option>)}
+              </select>
+              <input type="date" style={styles.inputSlim} value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
+              <input type="date" style={styles.inputSlim} value={toDate} onChange={(e) => setToDate(e.target.value)} />
+              <button style={styles.resetBtn} onClick={() => { setFromDate(''); setToDate(''); }}>Reset</button>
+            </>
+          )}
 
           {/* ✅ New Status Filter for Pending Tab */}
-{activeTab === 'pending' && (
-  <div style={styles.dropdownContainer}>
-    {/* The Trigger Button */}
-    <div 
-      style={{
-        ...styles.premiumButton, 
-        borderColor: isOpen ? '#4f46e5' : '#d1d5db',
-        transform: isOpen ? 'translateY(-2px)' : 'none'
-      }}
-      onClick={() => setIsOpen(!isOpen)}
-    >
-      <div style={{ ...styles.statusDot, backgroundColor: selectedOption.color }} />
-      <span style={styles.selectedText}>{selectedOption.label}</span>
-      <i className={`bi bi-chevron-${isOpen ? 'up' : 'down'}`} style={{ color: '#64748b', fontSize: '12px' }}></i>
-    </div>
-
-    {/* The Custom Menu */}
-    {isOpen && (
-      <div style={styles.customMenu}>
-        {options.map((opt) => (
-          <div 
-            key={opt.id}
-            style={{
-              ...styles.menuItem,
-              background: statusFilter === opt.id ? '#f0f4ff' : 'transparent',
-              color: statusFilter === opt.id ? '#4f46e5' : '#475569'
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.background = '#f8fafc'}
-            onMouseLeave={(e) => e.currentTarget.style.background = statusFilter === opt.id ? '#f0f4ff' : 'transparent'}
-            onClick={() => {
-              setStatusFilter(opt.id);
-              setCurrentPage(1);
-              setIsOpen(false);
-            }}
-          >
-            <i className={`bi ${opt.icon}`} style={{ color: opt.color, fontSize: '14px' }}></i>
-            {opt.label}
-          </div>
-        ))}
-      </div>
-    )}
-  </div>
-)}
+          {activeTab === 'pending' && (
+            <select 
+              style={styles.inputSlim} 
+              value={statusFilter} 
+              onChange={(e) => {
+                setStatusFilter(e.target.value);
+                setCurrentPage(1); // Reset to page 1 on filter change
+              }}
+            >
+              <option value="">All Statuses</option>
+              <option value="resolved">Resolved</option>
+              <option value="escalated">Escalated</option>
+              <option value="in progress">In Progress</option>
+              <option value="on hold">On Hold</option>
+            </select>
+          )}
         </div>
       </header>
 
@@ -866,9 +739,8 @@ const selectedUserName = userList.find(u => u.sid === selectedAgent)?.full_name 
       <th style={styles.th}>Resolution</th>
     </tr>
   </thead>
- <tbody>
-  {pendingIncidents.length > 0 ? (
-    pendingIncidents.map((incident, i) => (
+  <tbody>
+    {pendingIncidents.map((incident, i) => (
       <tr key={i} style={styles.tr}>
         <td style={styles.td}>
           <span style={{ fontWeight: '700', color: '#4f46e5' }}>
@@ -899,24 +771,8 @@ const selectedUserName = userList.find(u => u.sid === selectedAgent)?.full_name 
           </span>
         </td>
       </tr>
-    ))
-  ) : (
-    // ✅ This is the "No Data Found" message
-    <tr>
-      <td colSpan="4" style={{ padding: '40px 0', textAlign: 'center' }}>
-        <div style={styles.noDataWrapper}>
-          <i className={`bi ${selectedOption.icon}`} style={{ fontSize: '24px', color: '#cbd5e1', marginBottom: '10px', display: 'block' }}></i>
-          <p style={{ margin: 0, fontWeight: '700', color: '#64748b', fontSize: '14px' }}>
-            No data found in <span style={{ color: selectedOption.color }}>{selectedOption.label}</span>
-          </p>
-          <p style={{ margin: 0, fontSize: '12px', color: '#94a3b8' }}>
-            There are currently no incidents recorded for this status.
-          </p>
-        </div>
-      </td>
-    </tr>
-  )}
-</tbody>
+    ))}
+  </tbody>
 </table>
 
                 {/* ✅ Premium Pagination */}
@@ -1027,119 +883,26 @@ const styles = {
   activeTab: { padding: '5px 12px', background: '#fff', color: '#4f46e5', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '700', fontSize: '12px', boxShadow: '0 1px 2px rgba(0,0,0,0.08)' },
   inactiveTab: { padding: '5px 12px', background: 'transparent', color: '#64748b', border: 'none', cursor: 'pointer', fontWeight: '500', fontSize: '12px' },
   filterStrip: { display: 'flex', gap: '6px' },
-// inputSlim: {
-//     padding: '8px 12px',
-//     borderRadius: '8px',
-//     border: '1px solid #e2e8f0',
-//     fontSize: '13px',
-//     background: '#ffffff',
-//     color: '#1e293b',
-//     fontWeight: '500',
-//     outline: 'none',
-//     cursor: 'pointer',
-//     transition: 'all 0.2s ease',
-//     boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
-//     minWidth: '150px',
-//     appearance: 'none', // Removes default browser arrow
-//     backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
-//     backgroundRepeat: 'no-repeat',
-//     backgroundPosition: 'right 8px center',
-//     backgroundSize: '16px',
-//     paddingRight: '32px'
-//   },
-//   filterLabel: {
-//     fontSize: '11px',
-//     fontWeight: '700',
-//     color: '#64748b',
-//     textTransform: 'uppercase',
-//     marginBottom: '4px',
-//     display: 'block',
-//     letterSpacing: '0.5px'
-//   },
-//   filterContainer: {
-//     display: 'flex',
-//     flexDirection: 'column',
-//     justifyContent: 'center'
-//   },
-    
-premiumFilterWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    background: 'linear-gradient(145deg, #ffffff, #f8fafc)',
-    padding: '4px 12px',
-    borderRadius: '12px',
+inputSlim: {
+    padding: '8px 12px',
+    borderRadius: '8px',
     border: '1px solid #e2e8f0',
-    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
-    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-  },
-  statusIndicator: {
-    width: '8px',
-    height: '8px',
-    borderRadius: '50%',
-    marginRight: '10px',
-    backgroundColor: '#4f46e5',
-    boxShadow: '0 0 0 2px rgba(79, 70, 229, 0.2)',
-  },
-  premiumSelect: {
-    border: 'none',
-    background: 'transparent',
     fontSize: '13px',
-    fontWeight: '600',
-    color: '#1e293b',
-    padding: '8px 4px',
-    cursor: 'pointer',
-    outline: 'none',
-    minWidth: '160px',
-    appearance: 'none',
-  },
-  selectChevron: {
-    marginLeft: '8px',
-    color: '#64748b',
-    fontSize: '12px',
-    transition: 'transform 0.3s ease'
-  }, 
-
-  // Add these to your styles object
-  scrollableMenu: {
-    position: 'absolute',
-    top: '120%',
-    left: '-20px',
-    width: '200px',
-    maxHeight: '300px', // Limit height for long user lists
-    overflowY: 'auto',
-    background: 'rgba(255, 255, 255, 0.95)',
-    backdropFilter: 'blur(10px)',
-    borderRadius: '16px',
-    border: '1px solid rgba(255, 255, 255, 0.3)',
-    boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
-    zIndex: 1000,
-    padding: '8px',
-  },
-  premiumDateInput: {
-    padding: '6px 14px',
-    borderRadius: '14px',
-    border: '1px solid #d1d5db',
-    fontSize: '13px',
-    fontWeight: '600',
-    color: '#1e293b',
     background: '#ffffff',
+    color: '#1e293b',
+    fontWeight: '500',
     outline: 'none',
-    transition: 'all 0.3s ease',
     cursor: 'pointer',
-    boxShadow: '0 2px 5px rgba(0,0,0,0.02)',
-  },
-  noDataWrapper: {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: '20px',
-  background: '#f8fafc',
-  borderRadius: '12px',
-  border: '2px dashed #e2e8f0',
-  animation: 'fadeInUp 0.3s ease-out'
-},
-resetBtn: { background: 'none', border: 'none', color: '#ef4444', fontSize: '14px', cursor: 'pointer', fontWeight: '600' },
+    transition: 'all 0.2s ease',
+    boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
+    minWidth: '150px',
+    appearance: 'none', // Removes default browser arrow
+    backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E")`,
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'right 8px center',
+    backgroundSize: '16px',
+    paddingRight: '32px'
+  },  resetBtn: { background: 'none', border: 'none', color: '#ef4444', fontSize: '14px', cursor: 'pointer', fontWeight: '600' },
   kpiRow: { display: 'flex', backgroundColor: '#fff', borderRadius: '10px', marginBottom: '12px', padding: '30px 0', boxShadow: '0 1px 2px rgba(0,0,0,0.02)' },
   metricBox: { flex: 1, padding: '0 18px', display: 'flex', flexDirection: 'column', gap: '2px' },
   metricLabelArea: { display: 'flex', alignItems: 'center', gap: '6px' },
@@ -1166,64 +929,7 @@ resetBtn: { background: 'none', border: 'none', color: '#ef4444', fontSize: '14p
   pValue: { fontSize: '14px', fontWeight: '800' },
   badge: { fontSize: '9px', background: '#e0e7ff', color: '#4338ca', padding: '1px 6px', borderRadius: '8px', fontWeight: '700' },
   loader: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(255,255,255,0.6)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 100 },
-// Add these to your styles object
-  dropdownContainer: {
-    position: 'relative',
-    display: 'inline-block',
-  },
-  
-  premiumButton: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-    background: 'linear-gradient(145deg, #ffffff, #f0f4ff)',
-    padding: '5px 15px',
-    borderRadius: '14px',
-    border: '1px solid #d1d5db',
-    cursor: 'pointer',
-    boxShadow: '0 4px 15px rgba(0,0,0,0.05)',
-    transition: 'all 0.3s ease',
-  },
-  statusDot: {
-    width: '10px',
-    height: '10px',
-    borderRadius: '50%',
-    boxShadow: '0 0 8px rgba(79, 70, 229, 0.4)',
-  },
-  selectedText: {
-    fontSize: '14px',
-    fontWeight: '700',
-    color: '#1e293b',
-    minWidth: '80px',
-    textAlign: 'left'
-  },
-  customMenu: {
-    position: 'absolute',
-    top: '120%',
-    left: '0',
-    width: '200px',
-    background: 'rgba(255, 255, 255, 0.95)',
-    backdropFilter: 'blur(10px)',
-    borderRadius: '16px',
-    border: '1px solid rgba(255, 255, 255, 0.3)',
-    boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
-    overflow: 'hidden',
-    zIndex: 1000,
-    padding: '8px',
-    animation: 'fadeInUp 0.2s ease-out',
-  },
-  menuItem: {
-    padding: '10px 14px',
-    fontSize: '13px',
-    fontWeight: '600',
-    color: '#475569',
-    borderRadius: '10px',
-    cursor: 'pointer',
-    transition: 'all 0.2s ease',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px'
-  },
+
   // ✅ Pagination Styles
   paginationArea: { display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '5px', padding: '20px 0' },
   pagBtn: { border: '1px solid #e2e8f0', background: '#fff', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', color: '#4f46e5' },

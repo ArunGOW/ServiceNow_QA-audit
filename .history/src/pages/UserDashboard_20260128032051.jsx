@@ -226,36 +226,30 @@ const UsersDashboard = () => {
   }, [activeTab, currentPage]);
 
   const fetchPendingIncidents = async () => {
-  setIncidentsLoading(true);
-  try {
-    // Use user_sid from AuthContext (as defined in your login function)
-    const sid = user?.user_sid; 
+    setIncidentsLoading(true);
+    try {
+      const token = user?.token || localStorage.getItem("session_token");
+      // Note: adjust the SID source based on your AuthContext structure
+      const userSid = user?.sid || user?.user_sid || "d2e756f2-8dff-45fb-9931-9c52b0bdbcbb"; 
 
-    if (!sid) {
-      console.error("No User SID found in context");
-      return;
+      const response = await api.post('/users/get-pending/incidents/all', {
+        page: currentPage,
+        per_page: perPage,
+        user_sid: userSid
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      // Assuming API returns { incidents: [], total_count: X }
+      // Adjust based on exact response structure
+      setIncidents(response.data.incidents || []);
+      setTotalIncidents(response.data.total_count || 0);
+    } catch (err) {
+      console.error("Error fetching incidents:", err);
+    } finally {
+      setIncidentsLoading(false);
     }
-
-    // Headers are handled automatically by your axios interceptor
-    const response = await api.post('/users/get-pending/incidents/all', {
-      page: currentPage,
-      per_page: perPage,
-      user_sid: sid
-    });
-
-    // Based on common ServiceNow wrapper structures:
-    // If your API returns data inside a specific key, adjust 'response.data.data'
-    const incidentData = response.data.incidents || response.data.data || [];
-    const totalCount = response.data.total_count || response.data.total || 0;
-
-    setIncidents(incidentData);
-    setTotalIncidents(totalCount);
-  } catch (err) {
-    console.error("Error fetching incidents:", err.response?.data || err.message);
-  } finally {
-    setIncidentsLoading(false);
-  }
-};
+  };
 
   const renderActiveShape = (props) => {
     const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, payload, value } = props;
@@ -417,43 +411,24 @@ const UsersDashboard = () => {
 
           {/* Premium Pagination */}
           <div style={styles.pagination}>
-  <div style={styles.pageGroup}>
-    <button 
-      disabled={currentPage === 1} 
-      onClick={() => setCurrentPage(p => p - 1)}
-      style={currentPage === 1 ? styles.pageBtnDisabled : styles.pageBtn}
-    >
-      ← Previous
-    </button>
-
-    {/* Optional: Simple page number indicators */}
-    <div style={styles.pageNumbers}>
-      {Array.from({ length: Math.min(5, Math.ceil(totalIncidents / perPage)) }, (_, i) => {
-        const pageNum = i + 1;
-        return (
-          <span 
-            key={pageNum} 
-            style={currentPage === pageNum ? styles.activePageNum : styles.pageNum}
-            onClick={() => setCurrentPage(pageNum)}
-          >
-            {pageNum}
-          </span>
-        );
-      })}
-    </div>
-
-    <button 
-      disabled={currentPage >= Math.ceil(totalIncidents / perPage)}
-      onClick={() => setCurrentPage(p => p + 1)}
-      style={currentPage >= Math.ceil(totalIncidents / perPage) ? styles.pageBtnDisabled : styles.pageBtn}
-    >
-      Next →
-    </button>
-  </div>
-  <div style={styles.pageInfo}>
-    Showing <strong>{((currentPage - 1) * perPage) + 1}</strong> - <strong>{Math.min(currentPage * perPage, totalIncidents)}</strong> of {totalIncidents}
-  </div>
-</div>
+            <button 
+              disabled={currentPage === 1} 
+              onClick={() => setCurrentPage(p => p - 1)}
+              style={currentPage === 1 ? styles.pageBtnDisabled : styles.pageBtn}
+            >
+              Previous
+            </button>
+            <div style={styles.pageInfo}>
+              Page <strong>{currentPage}</strong> of {Math.ceil(totalIncidents / perPage) || 1}
+            </div>
+            <button 
+              disabled={currentPage >= Math.ceil(totalIncidents / perPage)}
+              onClick={() => setCurrentPage(p => p + 1)}
+              style={currentPage >= Math.ceil(totalIncidents / perPage) ? styles.pageBtnDisabled : styles.pageBtn}
+            >
+              Next
+            </button>
+          </div>
         </div>
       )}
     </div>

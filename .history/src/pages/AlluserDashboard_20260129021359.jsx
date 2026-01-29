@@ -525,7 +525,6 @@ const AllusersDashboard = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isUserOpen, setIsUserOpen] = useState(false);
 
   // ✅ New States for Pending Incidents
   const [pendingIncidents, setPendingIncidents] = useState([]);
@@ -545,7 +544,7 @@ const options = [
 
 const selectedOption = options.find(opt => opt.id === statusFilter) || options[0];
 
-
+const [isUserOpen, setIsUserOpen] = useState(false);
 
 // Find the label of the currently selected user
 const selectedUserName = userList.find(u => u.sid === selectedAgent)?.full_name || "Select Analyst";
@@ -671,98 +670,16 @@ const selectedUserName = userList.find(u => u.sid === selectedAgent)?.full_name 
 
         {/* ✅ Dynamic Filter Strip */}
         <div style={styles.filterStrip}>
-           {activeTab === 'individual' && (
-  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-    
-    {/* --- Premium Analyst Dropdown --- */}
-    <div style={styles.dropdownContainer}>
-      <div 
-        style={{
-          ...styles.premiumButton, 
-          borderColor: isUserOpen ? '#4f46e5' : '#d1d5db',
-          background: 'linear-gradient(145deg, #ffffff, #f9fafb)'
-        }}
-        onClick={() => setIsUserOpen(!isUserOpen)}
-      >
-        <div style={{ ...styles.statusDot, backgroundColor: '#6366f1' }} />
-        <span style={styles.selectedText}>{selectedUserName}</span>
-        <i className={`bi bi-chevron-${isUserOpen ? 'up' : 'down'}`} style={{ color: '#64748b', fontSize: '11px' }}></i>
-      </div>
-
-      {isUserOpen && (
-        <div style={styles.scrollableMenu}>
-          {userList.map((u) => (
-            <div 
-              key={u.sid}
-              style={{
-                ...styles.menuItem,
-                background: selectedAgent === u.sid ? '#f0f4ff' : 'transparent',
-                color: selectedAgent === u.sid ? '#4f46e5' : '#475569'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = selectedAgent === u.sid ? '#e0e7ff' : '#f1f5f9';
-                e.currentTarget.style.transform = 'translateX(4px)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = selectedAgent === u.sid ? '#f0f4ff' : 'transparent';
-                e.currentTarget.style.transform = 'translateX(0px)';
-              }}
-              onClick={() => {
-                setSelectedAgent(u.sid);
-                setIsUserOpen(false);
-              }}
-            >
-              <div style={{
-                width: '24px', height: '24px', borderRadius: '6px', background: '#e0e7ff', 
-                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: '800'
-              }}>
-                {u.full_name.charAt(0)}
-              </div>
-              {u.full_name}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-
-    {/* --- Premium Date Inputs --- */}
-    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-      <input 
-        type="date" 
-        style={styles.premiumDateInput} 
-        value={fromDate} 
-        onChange={(e) => setFromDate(e.target.value)}
-        onFocus={(e) => e.target.style.borderColor = '#4f46e5'}
-        onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
-      />
-      <span style={{ color: '#94a3b8', fontWeight: '800', fontSize: '10px' }}>TO</span>
-      <input 
-        type="date" 
-        style={styles.premiumDateInput} 
-        value={toDate} 
-        onChange={(e) => setToDate(e.target.value)} 
-        onFocus={(e) => e.target.style.borderColor = '#4f46e5'}
-        onBlur={(e) => e.target.style.borderColor = '#d1d5db'}
-      />
-    </div>
-
-    {/* --- Reset Button --- */}
-    <button 
-      style={{
-        ...styles.resetBtn,
-        padding: '8px 12px',
-        borderRadius: '10px',
-        fontSize: '13px',
-        transition: 'all 0.2s'
-      }} 
-      onMouseEnter={(e) => e.target.style.color = '#b91c1c'}
-      onMouseLeave={(e) => e.target.style.color = '#ef4444'}
-      onClick={() => { setFromDate(''); setToDate(''); }}
-    >
-      <i className="bi bi-arrow-counterclockwise"></i> Reset
-    </button>
-  </div>
-)}
+          {activeTab === 'individual' && (
+            <>
+              <select style={styles.inputSlim} value={selectedAgent} onChange={(e) => setSelectedAgent(e.target.value)}>
+                {userList.map(u => <option key={u.sid} value={u.sid}>{u.full_name}</option>)}
+              </select>
+              <input type="date" style={styles.inputSlim} value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
+              <input type="date" style={styles.inputSlim} value={toDate} onChange={(e) => setToDate(e.target.value)} />
+              <button style={styles.resetBtn} onClick={() => { setFromDate(''); setToDate(''); }}>Reset</button>
+            </>
+          )}
 
           {/* ✅ New Status Filter for Pending Tab */}
 {activeTab === 'pending' && (
@@ -866,9 +783,8 @@ const selectedUserName = userList.find(u => u.sid === selectedAgent)?.full_name 
       <th style={styles.th}>Resolution</th>
     </tr>
   </thead>
- <tbody>
-  {pendingIncidents.length > 0 ? (
-    pendingIncidents.map((incident, i) => (
+  <tbody>
+    {pendingIncidents.map((incident, i) => (
       <tr key={i} style={styles.tr}>
         <td style={styles.td}>
           <span style={{ fontWeight: '700', color: '#4f46e5' }}>
@@ -899,24 +815,8 @@ const selectedUserName = userList.find(u => u.sid === selectedAgent)?.full_name 
           </span>
         </td>
       </tr>
-    ))
-  ) : (
-    // ✅ This is the "No Data Found" message
-    <tr>
-      <td colSpan="4" style={{ padding: '40px 0', textAlign: 'center' }}>
-        <div style={styles.noDataWrapper}>
-          <i className={`bi ${selectedOption.icon}`} style={{ fontSize: '24px', color: '#cbd5e1', marginBottom: '10px', display: 'block' }}></i>
-          <p style={{ margin: 0, fontWeight: '700', color: '#64748b', fontSize: '14px' }}>
-            No data found in <span style={{ color: selectedOption.color }}>{selectedOption.label}</span>
-          </p>
-          <p style={{ margin: 0, fontSize: '12px', color: '#94a3b8' }}>
-            There are currently no incidents recorded for this status.
-          </p>
-        </div>
-      </td>
-    </tr>
-  )}
-</tbody>
+    ))}
+  </tbody>
 </table>
 
                 {/* ✅ Premium Pagination */}
@@ -1103,8 +1003,8 @@ premiumFilterWrapper: {
   scrollableMenu: {
     position: 'absolute',
     top: '120%',
-    left: '-20px',
-    width: '200px',
+    left: '0',
+    width: '220px',
     maxHeight: '300px', // Limit height for long user lists
     overflowY: 'auto',
     background: 'rgba(255, 255, 255, 0.95)',
@@ -1116,7 +1016,7 @@ premiumFilterWrapper: {
     padding: '8px',
   },
   premiumDateInput: {
-    padding: '6px 14px',
+    padding: '10px 14px',
     borderRadius: '14px',
     border: '1px solid #d1d5db',
     fontSize: '13px',
@@ -1128,17 +1028,6 @@ premiumFilterWrapper: {
     cursor: 'pointer',
     boxShadow: '0 2px 5px rgba(0,0,0,0.02)',
   },
-  noDataWrapper: {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: '20px',
-  background: '#f8fafc',
-  borderRadius: '12px',
-  border: '2px dashed #e2e8f0',
-  animation: 'fadeInUp 0.3s ease-out'
-},
 resetBtn: { background: 'none', border: 'none', color: '#ef4444', fontSize: '14px', cursor: 'pointer', fontWeight: '600' },
   kpiRow: { display: 'flex', backgroundColor: '#fff', borderRadius: '10px', marginBottom: '12px', padding: '30px 0', boxShadow: '0 1px 2px rgba(0,0,0,0.02)' },
   metricBox: { flex: 1, padding: '0 18px', display: 'flex', flexDirection: 'column', gap: '2px' },
@@ -1175,9 +1064,9 @@ resetBtn: { background: 'none', border: 'none', color: '#ef4444', fontSize: '14p
   premiumButton: {
     display: 'flex',
     alignItems: 'center',
-    gap: '10px',
+    gap: '12px',
     background: 'linear-gradient(145deg, #ffffff, #f0f4ff)',
-    padding: '5px 15px',
+    padding: '10px 20px',
     borderRadius: '14px',
     border: '1px solid #d1d5db',
     cursor: 'pointer',
@@ -1194,7 +1083,7 @@ resetBtn: { background: 'none', border: 'none', color: '#ef4444', fontSize: '14p
     fontSize: '14px',
     fontWeight: '700',
     color: '#1e293b',
-    minWidth: '80px',
+    minWidth: '110px',
     textAlign: 'left'
   },
   customMenu: {

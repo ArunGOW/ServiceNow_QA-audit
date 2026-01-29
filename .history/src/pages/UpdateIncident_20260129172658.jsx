@@ -1276,8 +1276,8 @@ const UpdateIncident = () => {
 };
 
 const styles = {
-  pageWrapper: { backgroundColor: '#f1f5f9', height: '100vh', display: 'flex',  justifyContent: 'center', padding: '10px' },
-  mainGrid: { display: 'grid', gridTemplateColumns: '1.4fr 0.8fr', width: '100%', maxWidth: '1100px', height: '82vh', backgroundColor: '#fff', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.1)' },
+  pageWrapper: { backgroundColor: '#f1f5f9', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '10px' },
+  mainGrid: { display: 'grid', gridTemplateColumns: '1.4fr 0.8fr', width: '100%', maxWidth: '950px', height: '82vh', backgroundColor: '#fff', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.1)' },
   formSection: { padding: '30px', overflowY: 'auto' },
   bannerIconBox: { width: '40px', height: '40px', background: 'rgba(255, 255, 255, 0.2)', backdropFilter: 'blur(10px)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' },
   label: { fontSize: '10px', fontWeight: '800', color: '#94a3b8', textTransform: 'uppercase', marginBottom: '5px' },

@@ -417,43 +417,24 @@ const UsersDashboard = () => {
 
           {/* Premium Pagination */}
           <div style={styles.pagination}>
-  <div style={styles.pageGroup}>
-    <button 
-      disabled={currentPage === 1} 
-      onClick={() => setCurrentPage(p => p - 1)}
-      style={currentPage === 1 ? styles.pageBtnDisabled : styles.pageBtn}
-    >
-      ← Previous
-    </button>
-
-    {/* Optional: Simple page number indicators */}
-    <div style={styles.pageNumbers}>
-      {Array.from({ length: Math.min(5, Math.ceil(totalIncidents / perPage)) }, (_, i) => {
-        const pageNum = i + 1;
-        return (
-          <span 
-            key={pageNum} 
-            style={currentPage === pageNum ? styles.activePageNum : styles.pageNum}
-            onClick={() => setCurrentPage(pageNum)}
-          >
-            {pageNum}
-          </span>
-        );
-      })}
-    </div>
-
-    <button 
-      disabled={currentPage >= Math.ceil(totalIncidents / perPage)}
-      onClick={() => setCurrentPage(p => p + 1)}
-      style={currentPage >= Math.ceil(totalIncidents / perPage) ? styles.pageBtnDisabled : styles.pageBtn}
-    >
-      Next →
-    </button>
-  </div>
-  <div style={styles.pageInfo}>
-    Showing <strong>{((currentPage - 1) * perPage) + 1}</strong> - <strong>{Math.min(currentPage * perPage, totalIncidents)}</strong> of {totalIncidents}
-  </div>
-</div>
+            <button 
+              disabled={currentPage === 1} 
+              onClick={() => setCurrentPage(p => p - 1)}
+              style={currentPage === 1 ? styles.pageBtnDisabled : styles.pageBtn}
+            >
+              Previous
+            </button>
+            <div style={styles.pageInfo}>
+              Page <strong>{currentPage}</strong> of {Math.ceil(totalIncidents / perPage) || 1}
+            </div>
+            <button 
+              disabled={currentPage >= Math.ceil(totalIncidents / perPage)}
+              onClick={() => setCurrentPage(p => p + 1)}
+              style={currentPage >= Math.ceil(totalIncidents / perPage) ? styles.pageBtnDisabled : styles.pageBtn}
+            >
+              Next
+            </button>
+          </div>
         </div>
       )}
     </div>

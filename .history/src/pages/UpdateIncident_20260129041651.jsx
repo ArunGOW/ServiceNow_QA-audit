@@ -756,274 +756,18 @@
 //----------------------------------------------------------------------------------------------------------------------------
 
 
-// import React, { useState, useEffect, useRef } from 'react';
-// import { Form, Button, Row, Col, Alert, Spinner, Modal } from 'react-bootstrap';
-// import api from "../api/axois";
-// import { useAuth } from "../context/AuthContext";
-
-// const UpdateIncident = () => {
-//   const { user: currentUser } = useAuth();
-  
-//   const analystRef = useRef(null);
-//   const statusRef = useRef(null);
-
-//   const [loading, setLoading] = useState(false);
-//   const [feedback, setFeedback] = useState(null);
-//   const [userList, setUserList] = useState([]);
-//   const [showClearModal, setShowClearModal] = useState(false);
-  
-//   const [isOpenAnalyst, setIsOpenAnalyst] = useState(false);
-//   const [isOpenStatus, setIsOpenStatus] = useState(false);
-
-//   const [recentIncidents, setRecentIncidents] = useState(() => {
-//     const saved = localStorage.getItem('aura_incident_history');
-//     return saved ? JSON.parse(saved) : [];
-//   });
-
-//   const [formData, setFormData] = useState({
-//     incident_number: '',
-//     short_description: '',
-//     status: 'resolved',
-//     resolution_shared: '',
-//     updates_link: '',
-//     user: '', 
-//     done_by: currentUser?.full_name || '', 
-//     escalated_notes: '' 
-//   });
-
-//   const statusOptions = [
-//     { id: 'resolved', label: 'Resolved', color: '#10b981', icon: 'bi-check-circle-fill' },
-//     { id: 'escalated', label: 'Escalated', color: '#f43f5e', icon: 'bi-fire' },
-//     { id: 'in progress', label: 'In Progress', color: '#3b82f6', icon: 'bi-clock-history' },
-//     { id: 'on hold', label: 'On Hold', color: '#f59e0b', icon: 'bi-pause-circle-fill' },
-//   ];
-
-//   const currentStatus = statusOptions.find(s => s.id === formData.status) || statusOptions[0];
-
-//   useEffect(() => {
-//     const fetchUsers = async () => {
-//       try {
-//         const token = currentUser?.token || localStorage.getItem("session_token");
-//         const res = await api.get('http://52.56.78.188:8010/api/users/get/list_users', {
-//           headers: { Authorization: `Bearer ${token}` }
-//         });
-//         setUserList(res.data || []);
-//       } catch (err) {
-//         console.error("API Error:", err);
-//       }
-//     };
-//     fetchUsers();
-//   }, [currentUser]);
-
-//   useEffect(() => {
-//     const handleClickOutside = (event) => {
-//       if (analystRef.current && !analystRef.current.contains(event.target)) setIsOpenAnalyst(false);
-//       if (statusRef.current && !statusRef.current.contains(event.target)) setIsOpenStatus(false);
-//     };
-//     document.addEventListener("mousedown", handleClickOutside);
-//     return () => document.removeEventListener("mousedown", handleClickOutside);
-//   }, []);
-
-//   useEffect(() => {
-//     localStorage.setItem('aura_incident_history', JSON.stringify(recentIncidents));
-//   }, [recentIncidents]);
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     setLoading(true);
-//     setFeedback(null);
-
-//     const payload = [{
-//       ...formData,
-//       escalated_notes: formData.status === 'escalated' ? formData.escalated_notes : "N/A"
-//     }];
-
-//     try {
-//       const token = currentUser?.token || localStorage.getItem("session_token");
-//       await api.post('/users/update/incidents', payload, {
-//         headers: { 'Authorization': `Bearer ${token}` }
-//       });
-      
-//       setFeedback({ type: 'success', message: "Incident Synced!" });
-//       const newEntry = { ...formData, timestamp: new Date().toLocaleTimeString() };
-//       setRecentIncidents([newEntry, ...recentIncidents].slice(0, 10));
-//       setFormData({ ...formData, incident_number: '', short_description: '', resolution_shared: '', user: '', escalated_notes: '' });
-//     } catch (err) {
-//       setFeedback({ type: 'danger', message: "Sync Failed" });
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   return (
-//     <div style={styles.pageWrapper}>
-//       <style>{`
-//         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-//         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-//         .menu-item:hover { background-color: #f8fafc !important; transform: translateX(5px); }
-//         @keyframes fadeInUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-//       `}</style>
-      
-//       <div style={styles.mainGrid}>
-//         <div style={styles.formSection}>
-//           <div className="d-flex justify-content-between align-items-center mb-4">
-//             <h4 className="m-0" style={{ fontWeight: 900 }}>Update <span style={{ color: '#4f46e5' }}>Incident</span></h4>
-//             {recentIncidents.length > 0 && (
-//               <Button variant="link" className="text-danger p-0 text-decoration-none small fw-bold" onClick={() => setShowClearModal(true)}>
-//                 <i className="bi bi-trash3 me-1"></i> Clear Log
-//               </Button>
-//             )}
-//           </div>
-
-//           <Form onSubmit={handleSubmit}>
-//             <Row className="g-3">
-//               <Col md={6}>
-//                 <Form.Label style={styles.label}>Incident ID</Form.Label>
-//                 <Form.Control value={formData.incident_number} placeholder="INC00..." style={styles.input} onChange={(e) => setFormData({...formData, incident_number: e.target.value})} required />
-//               </Col>
-              
-//               <Col md={6}>
-//                 <Form.Label style={styles.label}>Analyst</Form.Label>
-//                 <div style={styles.dropdownContainer} ref={analystRef}>
-//                   <div style={{...styles.premiumTrigger, borderColor: isOpenAnalyst ? '#4f46e5' : '#e2e8f0'}} onClick={() => setIsOpenAnalyst(!isOpenAnalyst)}>
-//                     <div className="d-flex align-items-center">
-//                       <i className="bi bi-person-circle me-2 text-primary" style={{ fontSize: '1.1rem' }}></i>
-//                       <span style={styles.triggerText}>{formData.done_by || "Select Analyst"}</span>
-//                     </div>
-//                     <i className="bi bi-chevron-expand text-muted"></i>
-//                   </div>
-//                   {isOpenAnalyst && (
-//                     <div style={styles.customMenu} className="custom-scrollbar">
-//                       {userList.length > 0 ? (
-//                         userList.map(u => (
-//                           <div key={u.sid} className="menu-item" style={styles.menuItem} onClick={() => { setFormData({...formData, done_by: u.full_name}); setIsOpenAnalyst(false); }}>
-//                             <div style={styles.avatarMini}>{u.full_name.charAt(0)}</div>
-//                             {u.full_name}
-//                           </div>
-//                         ))
-//                       ) : (
-//                         <div className="text-center p-3 small text-muted">Fetching analysts...</div>
-//                       )}
-//                     </div>
-//                   )}
-//                 </div>
-//               </Col>
-
-//               <Col md={6}>
-//                 <Form.Label style={styles.label}>User Name</Form.Label>
-//                 <Form.Control value={formData.user} placeholder="Client Name" style={styles.input} onChange={(e) => setFormData({...formData, user: e.target.value})} required />
-//               </Col>
-
-//               <Col md={6}>
-//                 <Form.Label style={styles.label}>Status</Form.Label>
-//                 <div style={styles.dropdownContainer} ref={statusRef}>
-//                   <div style={{...styles.premiumTrigger, borderColor: isOpenStatus ? '#4f46e5' : '#e2e8f0'}} onClick={() => setIsOpenStatus(!isOpenStatus)}>
-//                     <div className="d-flex align-items-center">
-//                       <i className={`bi ${currentStatus.icon} me-2`} style={{ color: currentStatus.color, fontSize: '1.1rem' }}></i>
-//                       <span style={styles.triggerText}>{currentStatus.label}</span>
-//                     </div>
-//                     <i className="bi bi-chevron-expand text-muted"></i>
-//                   </div>
-//                   {isOpenStatus && (
-//                     <div style={styles.customMenu}>
-//                       {statusOptions.map(opt => (
-//                         <div key={opt.id} className="menu-item" style={styles.menuItem} onClick={() => { setFormData({...formData, status: opt.id}); setIsOpenStatus(false); }}>
-//                           <i className={`bi ${opt.icon} me-2`} style={{color: opt.color, fontSize: '1rem'}}></i> {opt.label}
-//                         </div>
-//                       ))}
-//                     </div>
-//                   )}
-//                 </div>
-//               </Col>
-
-//               <Col md={12}><Form.Label style={styles.label}>Description</Form.Label><Form.Control value={formData.short_description} style={styles.input} onChange={(e) => setFormData({...formData, short_description: e.target.value})} required /></Col>
-              
-//               {formData.status === 'escalated' && (
-//                 <Col md={12} style={{ animation: 'fadeInUp 0.3s ease' }}>
-//                   <Form.Label style={{...styles.label, color: '#f43f5e'}}>Escalation Reason</Form.Label>
-//                   <Form.Control as="textarea" rows={1} style={{...styles.textarea, borderColor: '#fecaca'}} value={formData.escalated_notes} onChange={(e) => setFormData({...formData, escalated_notes: e.target.value})} required />
-//                 </Col>
-//               )}
-
-//               <Col md={12}><Form.Label style={styles.label}>Resolution Summary</Form.Label><Form.Control value={formData.resolution_shared} style={styles.input} onChange={(e) => setFormData({...formData, resolution_shared: e.target.value})} /></Col>
-//             </Row>
-            
-//             {feedback && <Alert variant={feedback.type} className="mt-3 py-2 small border-0 shadow-sm">{feedback.message}</Alert>}
-            
-//             <Button type="submit" style={styles.submitBtn} className="w-100 mt-4 text-white" disabled={loading}>
-//               {loading ? <Spinner size="sm" /> : 'Sync with Dashboard'}
-//             </Button>
-//           </Form>
-//         </div>
-
-//         <div style={styles.previewSection} className="custom-scrollbar">
-//           <div style={styles.previewHeader}><div style={styles.liveDot}></div> SESSION HISTORY</div>
-//           {recentIncidents.map((inc, i) => (
-//             <div key={i} style={styles.historyCard}>
-//               <div className="d-flex justify-content-between align-items-center">
-//                 <span style={{fontSize: '11px', fontWeight: 800,}}>{inc.incident_number}</span>
-//                 <span style={{fontSize: '9px', background: inc.status === 'resolved' ? '#064e3b' : '#451a03', color: inc.status === 'resolved' ? '#10b981' : '#f59e0b', padding: '2px 6px', borderRadius: '4px'}}>
-//                   {inc.status.toUpperCase()}
-//                 </span>
-//               </div>
-//               <div style={{fontSize: '10px', color: '#94a3b8', marginTop: '4px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>{inc.short_description}</div>
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-
-//       <Modal show={showClearModal} onHide={() => setShowClearModal(false)} centered>
-//         <Modal.Body className="text-center p-4">
-//           <h6 className="fw-bold">Clear local history log?</h6>
-//           <div className="d-flex gap-2 mt-4">
-//             <Button variant="light" size="sm" className="flex-grow-1" onClick={() => setShowClearModal(false)}>Cancel</Button>
-//             <Button variant="danger" size="sm" className="flex-grow-1" onClick={() => { setRecentIncidents([]); setShowClearModal(false); }}>Clear All</Button>
-//           </div>
-//         </Modal.Body>
-//       </Modal>
-//     </div>
-//   );
-// };
-
-// const styles = {
-//   pageWrapper: { backgroundColor: '#f1f5f9', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '10px' },
-//   mainGrid: { display: 'grid', gridTemplateColumns: '1.4fr 0.8fr', width: '100%', maxWidth: '950px', height: '82vh', backgroundColor: '#fff', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.1)' },
-//   formSection: { padding: '30px', overflowY: 'auto' },
-//   label: { fontSize: '10px', fontWeight: '800', color: '#94a3b8', textTransform: 'uppercase', marginBottom: '5px' },
-//   input: { borderRadius: '10px', padding: '8px 12px', border: '1px solid #e2e8f0', fontSize: '13px', backgroundColor: '#f8fafc' },
-//   textarea: { borderRadius: '10px', border: '1px solid #e2e8f0', fontSize: '12px', backgroundColor: '#f8fafc' },
-//   dropdownContainer: { position: 'relative' },
-//   premiumTrigger: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px', borderRadius: '10px', border: '1px solid #e2e8f0', backgroundColor: '#f8fafc', cursor: 'pointer', transition: 'all 0.2s' },
-//   triggerText: { fontSize: '13px', fontWeight: '600', color: '#1e293b' },
-//   customMenu: { position: 'absolute', top: '110%', left: 0, right: 0, backgroundColor: '#fff', borderRadius: '14px', boxShadow: '0 12px 30px rgba(0,0,0,0.1)', zIndex: 1000, border: '1px solid #e2e8f0', padding: '5px', maxHeight: '180px', overflowY: 'auto', animation: 'fadeInUp 0.2s ease-out' },
-//   menuItem: { padding: '8px 12px', borderRadius: '8px', fontSize: '12px', fontWeight: '600', color: '#475569', cursor: 'pointer', display: 'flex', alignItems: 'center', transition: '0.2s', marginBottom: '2px' },
-//   avatarMini: { width: '20px', height: '20px', background: '#e0e7ff', color: '#4f46e5', borderRadius: '5px', marginRight: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '9px', fontWeight: 'bold' },
-//   submitBtn: { background: '#4f46e5', border: 'none', borderRadius: '12px', padding: '12px', fontWeight: '800', boxShadow: '0 4px 12px rgba(79, 70, 229, 0.3)' },
-//   previewSection: { backgroundColor: '#0f172a', padding: '25px', overflowY: 'auto' },
-//   previewHeader: { fontSize: '9px', fontWeight: '900', color: '#e1e7ef', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '8px' },
-//   liveDot: { width: '6px', height: '6px', background: '#10b981', borderRadius: '50%' },
-//   historyCard: { background: '#1e293b', padding: '12px', borderRadius: '12px', marginBottom: '10px', borderLeft: '3px solid #4f46e5' }
-// };
-
-// export default UpdateIncident;
-
-
-import React, { useState, useEffect, useRef } from 'react';
-import { Form, Button, Row, Col, Alert, Spinner, Modal } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Form, Button, Row, Col, Alert, Spinner } from 'react-bootstrap';
 import api from "../api/axois";
 import { useAuth } from "../context/AuthContext";
 
 const UpdateIncident = () => {
   const { user: currentUser } = useAuth();
-  
-  const analystRef = useRef(null);
-  const statusRef = useRef(null);
-
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState(null);
   const [userList, setUserList] = useState([]);
-  const [showClearModal, setShowClearModal] = useState(false);
-  
+
+  // --- NEW: Custom Dropdown States ---
   const [isOpenAnalyst, setIsOpenAnalyst] = useState(false);
   const [isOpenStatus, setIsOpenStatus] = useState(false);
 
@@ -1056,29 +800,22 @@ const UpdateIncident = () => {
     const fetchUsers = async () => {
       try {
         const token = currentUser?.token || localStorage.getItem("session_token");
-        const res = await api.get('http://52.56.78.188:8010/api/users/get/list_users', {
+        const res = await api.get('/users/get/list_users', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setUserList(res.data || []);
-      } catch (err) {
-        console.error("API Error:", err);
-      }
+      } catch (err) { console.error("Failed to fetch user list", err); }
     };
     fetchUsers();
   }, [currentUser]);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (analystRef.current && !analystRef.current.contains(event.target)) setIsOpenAnalyst(false);
-      if (statusRef.current && !statusRef.current.contains(event.target)) setIsOpenStatus(false);
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  useEffect(() => {
     localStorage.setItem('aura_incident_history', JSON.stringify(recentIncidents));
   }, [recentIncidents]);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -1086,138 +823,65 @@ const UpdateIncident = () => {
     setFeedback(null);
 
     const payload = [{
-      ...formData,
-      escalated_notes: formData.status === 'escalated' ? formData.escalated_notes : "N/A"
+      done_by: formData.done_by,
+      escalated_notes: formData.escalated_notes || "N/A",
+      incident_number: formData.incident_number,
+      resolution_shared: formData.resolution_shared || "N/A",
+      short_description: formData.short_description,
+      status: formData.status,
+      updates_link: formData.updates_link || " ",
+      user: formData.user
     }];
 
     try {
       const token = currentUser?.token || localStorage.getItem("session_token");
-      await api.post('/users/update/incidents', payload, {
-        headers: { 'Authorization': `Bearer ${token}` }
+      const res = await api.post('/users/update/incidents', payload, {
+        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
       });
       
-      setFeedback({ type: 'success', message: "Incident Synced!" });
-      const newEntry = { ...formData, timestamp: new Date().toLocaleTimeString() };
-      setRecentIncidents([newEntry, ...recentIncidents].slice(0, 10));
-      setFormData({ ...formData, incident_number: '', short_description: '', resolution_shared: '', user: '', escalated_notes: '' });
+      if (res.status === 200) {
+        setFeedback({ type: 'success', message: "Incident Synced Successfully" });
+        const newEntry = { ...formData, timestamp: new Date().toLocaleString() };
+        setRecentIncidents([newEntry, ...recentIncidents].slice(0, 10));
+        setFormData({ ...formData, incident_number: '', short_description: '', resolution_shared: '', user: '', escalated_notes: '' });
+      }
     } catch (err) {
-      setFeedback({ type: 'danger', message: "Sync Failed" });
-    } finally {
-      setLoading(false);
-    }
+      setFeedback({ type: 'danger', message: err.response?.data?.message || "Update Failed" });
+    } finally { setLoading(false); }
   };
 
   return (
     <div style={styles.pageWrapper}>
-      {/* Bootstrap Icons CDN link */}
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
-      
       <style>{`
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        .menu-item:hover { background-color: #f8fafc !important; transform: translateX(5px); }
-        .premium-banner {
-          background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-          border-radius: 16px;
-          padding: 20px;
-          margin-bottom: 25px;
-          color: white;
-          position: relative;
-          overflow: hidden;
-          box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.4);
-        }
-        .premium-banner::after {
-          content: "";
-          position: absolute;
-          top: -50%;
-          right: -10%;
-          width: 200px;
-          height: 200px;
-          background: rgba(255,255,255,0.1);
-          border-radius: 50%;
-        }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
       `}</style>
       
       <div style={styles.mainGrid}>
+        {/* LEFT SECTION: FORM */}
         <div style={styles.formSection}>
-          
-          {/* ✅ Premium Banner */}
-          <div className="premium-banner">
-            <div className="d-flex align-items-center gap-3">
-              <div style={styles.bannerIconBox}>
-                <i className="bi bi-lightning-charge-fill"></i>
-              </div>
-              <div>
-                <h5 className="m-0 fw-bold">Incident Portal</h5>
-                <p className="m-0 small opacity-75">Sync real-time updates to the active dashboard</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="d-flex justify-content-between align-items-center mb-3">
-            <h4 className="m-0" style={{ fontWeight: 900 }}>Update <span style={{ color: '#4f46e5' }}>Incident</span></h4>
-            {recentIncidents.length > 0 && (
-              <Button variant="link" className="text-danger p-0 text-decoration-none small fw-bold" onClick={() => setShowClearModal(true)}>
-                <i className="bi bi-trash3 me-1"></i> Clear Log
-              </Button>
-            )}
-          </div>
-
+          <h4 style={{ fontWeight: 900, marginBottom: '20px' }}>Update <span style={{ color: '#4f46e5' }}>Incident</span></h4>
           <Form onSubmit={handleSubmit}>
             <Row className="g-3">
               <Col md={6}>
                 <Form.Label style={styles.label}>Incident ID</Form.Label>
-                <Form.Control value={formData.incident_number} placeholder="INC00..." style={styles.input} onChange={(e) => setFormData({...formData, incident_number: e.target.value})} required />
+                <Form.Control name="incident_number" value={formData.incident_number} placeholder="INC001..." style={styles.input} onChange={handleChange} required />
               </Col>
               
               <Col md={6}>
-                <Form.Label style={styles.label}>Analyst</Form.Label>
-                <div style={styles.dropdownContainer} ref={analystRef}>
+                <Form.Label style={styles.label}>Analyst (Done By)</Form.Label>
+                <div style={styles.dropdownContainer}>
                   <div style={{...styles.premiumTrigger, borderColor: isOpenAnalyst ? '#4f46e5' : '#e2e8f0'}} onClick={() => setIsOpenAnalyst(!isOpenAnalyst)}>
-                    <div className="d-flex align-items-center">
-                      <i className="bi bi-person-vcard text-primary me-2" style={{ fontSize: '1.1rem' }}></i>
-                      <span style={styles.triggerText}>{formData.done_by || "Select Analyst"}</span>
-                    </div>
-                    <i className="bi bi-chevron-expand text-muted"></i>
+                    <span style={styles.triggerText}>{formData.done_by || "Select Analyst"}</span>
+                    <i className={`bi bi-chevron-${isOpenAnalyst ? 'up' : 'down'}`}></i>
                   </div>
                   {isOpenAnalyst && (
-                    <div style={styles.customMenu} className="custom-scrollbar">
-                      {userList.length > 0 ? (
-                        userList.map(u => (
-                          <div key={u.sid} className="menu-item" style={styles.menuItem} onClick={() => { setFormData({...formData, done_by: u.full_name}); setIsOpenAnalyst(false); }}>
-                            <div style={styles.avatarMini}>{u.full_name.charAt(0)}</div>
-                            {u.full_name}
-                          </div>
-                        ))
-                      ) : (
-                        <div className="text-center p-3 small text-muted">Fetching analysts...</div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </Col>
-
-              <Col md={6}>
-                <Form.Label style={styles.label}>User Name</Form.Label>
-                <Form.Control value={formData.user} placeholder="Client Name" style={styles.input} onChange={(e) => setFormData({...formData, user: e.target.value})} required />
-              </Col>
-
-              <Col md={6}>
-                <Form.Label style={styles.label}>Status</Form.Label>
-                <div style={styles.dropdownContainer} ref={statusRef}>
-                  <div style={{...styles.premiumTrigger, borderColor: isOpenStatus ? '#4f46e5' : '#e2e8f0'}} onClick={() => setIsOpenStatus(!isOpenStatus)}>
-                    <div className="d-flex align-items-center">
-                      <i className={`bi ${currentStatus.icon} me-2`} style={{ color: currentStatus.color, fontSize: '1.1rem' }}></i>
-                      <span style={styles.triggerText}>{currentStatus.label}</span>
-                    </div>
-                    <i className="bi bi-chevron-expand text-muted"></i>
-                  </div>
-                  {isOpenStatus && (
                     <div style={styles.customMenu}>
-                      {statusOptions.map(opt => (
-                        <div key={opt.id} className="menu-item" style={styles.menuItem} onClick={() => { setFormData({...formData, status: opt.id}); setIsOpenStatus(false); }}>
-                          <i className={`bi ${opt.icon} me-2`} style={{color: opt.color, fontSize: '1rem'}}></i> {opt.label}
+                      {userList.map(u => (
+                        <div key={u.sid} style={styles.menuItem} onClick={() => { setFormData({...formData, done_by: u.full_name}); setIsOpenAnalyst(false); }}
+                             onMouseEnter={e => e.currentTarget.style.background = '#f1f5f9'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                          {u.full_name}
                         </div>
                       ))}
                     </div>
@@ -1225,16 +889,35 @@ const UpdateIncident = () => {
                 </div>
               </Col>
 
-              <Col md={12}><Form.Label style={styles.label}>Description</Form.Label><Form.Control value={formData.short_description} style={styles.input} onChange={(e) => setFormData({...formData, short_description: e.target.value})} required /></Col>
-              
-              {formData.status === 'escalated' && (
-                <Col md={12} style={{ animation: 'fadeInUp 0.3s ease' }}>
-                  <Form.Label style={{...styles.label, color: '#f43f5e'}}>Escalation Reason</Form.Label>
-                  <Form.Control as="textarea" rows={1} style={{...styles.textarea, borderColor: '#fecaca'}} value={formData.escalated_notes} onChange={(e) => setFormData({...formData, escalated_notes: e.target.value})} required />
-                </Col>
-              )}
+              <Col md={6}>
+                <Form.Label style={styles.label}>End User</Form.Label>
+                <Form.Control name="user" value={formData.user} placeholder="Client Name" style={styles.input} onChange={handleChange} required />
+              </Col>
 
-              <Col md={12}><Form.Label style={styles.label}>Resolution Summary</Form.Label><Form.Control value={formData.resolution_shared} style={styles.input} onChange={(e) => setFormData({...formData, resolution_shared: e.target.value})} /></Col>
+              <Col md={6}>
+                <Form.Label style={styles.label}>Current Status</Form.Label>
+                <div style={styles.dropdownContainer}>
+                  <div style={{...styles.premiumTrigger, borderColor: isOpenStatus ? '#4f46e5' : '#e2e8f0'}} onClick={() => setIsOpenStatus(!isOpenStatus)}>
+                    <div style={{...styles.statusDot, backgroundColor: currentStatus.color}}></div>
+                    <span style={styles.triggerText}>{currentStatus.label}</span>
+                    <i className={`bi bi-chevron-${isOpenStatus ? 'up' : 'down'}`}></i>
+                  </div>
+                  {isOpenStatus && (
+                    <div style={styles.customMenu}>
+                      {statusOptions.map(opt => (
+                        <div key={opt.id} style={styles.menuItem} onClick={() => { setFormData({...formData, status: opt.id}); setIsOpenStatus(false); }}
+                             onMouseEnter={e => e.currentTarget.style.background = '#f1f5f9'} onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                          <i className={`bi ${opt.icon}`} style={{color: opt.color, marginRight: '10px'}}></i> {opt.label}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </Col>
+
+              <Col md={12}><Form.Label style={styles.label}>Description</Form.Label><Form.Control name="short_description" value={formData.short_description} style={styles.input} onChange={handleChange} required /></Col>
+              <Col md={12}><Form.Label style={styles.label}>Resolution</Form.Label><Form.Control name="resolution_shared" value={formData.resolution_shared} style={styles.input} onChange={handleChange} /></Col>
+              <Col md={12}><Form.Label style={styles.label}>Notes</Form.Label><Form.Control as="textarea" rows={1} name="escalated_notes" value={formData.escalated_notes} style={styles.textarea} onChange={handleChange} /></Col>
             </Row>
             
             {feedback && <Alert variant={feedback.type} className="mt-3 py-2 small border-0 shadow-sm">{feedback.message}</Alert>}
@@ -1245,55 +928,52 @@ const UpdateIncident = () => {
           </Form>
         </div>
 
+        {/* RIGHT SECTION: HISTORY (SCROLLABLE) */}
         <div style={styles.previewSection} className="custom-scrollbar">
-          <div style={styles.previewHeader}><div style={styles.liveDot}></div> SESSION HISTORY</div>
-          {recentIncidents.map((inc, i) => (
-            <div key={i} style={styles.historyCard}>
-              <div className="d-flex justify-content-between align-items-center">
-                {/* ✅ Incident Number in White */}
-                <span style={{fontSize: '11px', fontWeight: 800, color: '#ffffff'}}>{inc.incident_number}</span>
-                <span style={{fontSize: '9px', background: inc.status === 'resolved' ? '#064e3b' : '#451a03', color: inc.status === 'resolved' ? '#10b981' : '#f59e0b', padding: '2px 6px', borderRadius: '4px'}}>
-                  {inc.status.toUpperCase()}
-                </span>
-              </div>
-              <div style={{fontSize: '10px', color: '#94a3b8', marginTop: '4px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>{inc.short_description}</div>
-            </div>
-          ))}
+          <div style={styles.previewHeader}><div style={styles.liveDot}></div> RECENT ACTIVITY</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {recentIncidents.length === 0 ? (
+               <p style={{color: '#64748b', fontSize: '12px', textAlign: 'center', marginTop: '40px'}}>No history available</p>
+            ) : (
+              recentIncidents.map((inc, i) => (
+                <div key={i} style={styles.historyCard}>
+                  <div className="d-flex justify-content-between">
+                    <span style={{fontSize: '10px', color: '#64748b'}}>{inc.timestamp}</span>
+                    <span style={{fontSize: '10px', color: inc.status === 'resolved' ? '#10b981' : '#f59e0b', fontWeight: 800}}>{inc.status.toUpperCase()}</span>
+                  </div>
+                  <div style={{fontSize: '14px', fontWeight: 700, margin: '4px 0'}}>{inc.incident_number}</div>
+                  <div style={{fontSize: '11px', color: '#94a3b8', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>{inc.short_description}</div>
+                </div>
+              ))
+            )}
+          </div>
         </div>
       </div>
-
-      <Modal show={showClearModal} onHide={() => setShowClearModal(false)} centered>
-        <Modal.Body className="text-center p-4">
-          <h6 className="fw-bold">Clear local history log?</h6>
-          <div className="d-flex gap-2 mt-4">
-            <Button variant="light" size="sm" className="flex-grow-1" onClick={() => setShowClearModal(false)}>Cancel</Button>
-            <Button variant="danger" size="sm" className="flex-grow-1" onClick={() => { setRecentIncidents([]); setShowClearModal(false); }}>Clear All</Button>
-          </div>
-        </Modal.Body>
-      </Modal>
     </div>
   );
 };
 
 const styles = {
-  pageWrapper: { backgroundColor: '#f1f5f9', height: '100vh', display: 'flex',  justifyContent: 'center', padding: '10px' },
-  mainGrid: { display: 'grid', gridTemplateColumns: '1.4fr 0.8fr', width: '100%', maxWidth: '1100px', height: '82vh', backgroundColor: '#fff', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.1)' },
-  formSection: { padding: '30px', overflowY: 'auto' },
-  bannerIconBox: { width: '40px', height: '40px', background: 'rgba(255, 255, 255, 0.2)', backdropFilter: 'blur(10px)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' },
-  label: { fontSize: '10px', fontWeight: '800', color: '#94a3b8', textTransform: 'uppercase', marginBottom: '5px' },
-  input: { borderRadius: '10px', padding: '8px 12px', border: '1px solid #e2e8f0', fontSize: '13px', backgroundColor: '#f8fafc' },
-  textarea: { borderRadius: '10px', border: '1px solid #e2e8f0', fontSize: '12px', backgroundColor: '#f8fafc' },
+  pageWrapper: { backgroundColor: '#f1f5f9', height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' },
+  mainGrid: { display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: '0', width: '100%', maxWidth: '1000px', height: '85vh', backgroundColor: '#fff', borderRadius: '28px', overflow: 'hidden', boxShadow: '0 25px 50px -12px rgba(0,0,0,0.1)' },
+  formSection: { padding: '40px', overflowY: 'auto' },
+  label: { fontSize: '10px', fontWeight: '800', color: '#94a3b8', textTransform: 'uppercase', marginBottom: '6px', letterSpacing: '0.5px' },
+  input: { borderRadius: '12px', padding: '10px 15px', border: '1px solid #e2e8f0', fontSize: '14px', backgroundColor: '#f8fafc' },
+  textarea: { borderRadius: '12px', border: '1px solid #e2e8f0', fontSize: '13px', backgroundColor: '#f8fafc' },
+  
+  // Custom Dropdown Styles
   dropdownContainer: { position: 'relative' },
-  premiumTrigger: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px', borderRadius: '10px', border: '1px solid #e2e8f0', backgroundColor: '#f8fafc', cursor: 'pointer', transition: 'all 0.2s' },
-  triggerText: { fontSize: '13px', fontWeight: '600', color: '#1e293b' },
-  customMenu: { position: 'absolute', top: '110%', left: 0, right: 0, backgroundColor: '#fff', borderRadius: '14px', boxShadow: '0 12px 30px rgba(0,0,0,0.1)', zIndex: 1000, border: '1px solid #e2e8f0', padding: '5px', maxHeight: '180px', overflowY: 'auto', animation: 'fadeInUp 0.2s ease-out' },
-  menuItem: { padding: '8px 12px', borderRadius: '8px', fontSize: '12px', fontWeight: '600', color: '#475569', cursor: 'pointer', display: 'flex', alignItems: 'center', transition: '0.2s', marginBottom: '2px' },
-  avatarMini: { width: '20px', height: '20px', background: '#e0e7ff', color: '#4f46e5', borderRadius: '5px', marginRight: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '9px', fontWeight: 'bold' },
-  submitBtn: { background: '#4f46e5', border: 'none', borderRadius: '12px', padding: '12px', fontWeight: '800', boxShadow: '0 4px 12px rgba(79, 70, 229, 0.3)' },
-  previewSection: { backgroundColor: '#0f172a', padding: '25px', overflowY: 'auto' },
-  previewHeader: { fontSize: '9px', fontWeight: '900', color: '#e1e7ef', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '8px' },
-  liveDot: { width: '6px', height: '6px', background: '#10b981', borderRadius: '50%' },
-  historyCard: { background: '#1e293b', padding: '12px', borderRadius: '12px', marginBottom: '10px', borderLeft: '3px solid #4f46e5' }
+  premiumTrigger: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 15px', borderRadius: '12px', border: '1px solid #e2e8f0', backgroundColor: '#f8fafc', cursor: 'pointer', transition: '0.2s' },
+  triggerText: { fontSize: '14px', fontWeight: '600', color: '#1e293b' },
+  statusDot: { width: '8px', height: '8px', borderRadius: '50%', marginRight: '10px' },
+  customMenu: { position: 'absolute', top: '110%', left: 0, right: 0, backgroundColor: '#fff', borderRadius: '12px', boxShadow: '0 10px 25px rgba(0,0,0,0.1)', zIndex: 10, padding: '5px', animation: 'fadeIn 0.2s ease-out', maxHeight: '200px', overflowY: 'auto' },
+  menuItem: { padding: '10px', borderRadius: '8px', fontSize: '13px', fontWeight: '600', color: '#475569', cursor: 'pointer', display: 'flex', alignItems: 'center' },
+
+  submitBtn: { background: '#4f46e5', border: 'none', borderRadius: '14px', padding: '14px', fontWeight: '800', boxShadow: '0 10px 20px -5px rgba(79, 70, 229, 0.4)' },
+  previewSection: { backgroundColor: '#0f172a', padding: '30px', overflowY: 'auto' },
+  previewHeader: { fontSize: '10px', fontWeight: '900', color: '#475569', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' },
+  liveDot: { width: '8px', height: '8px', background: '#10b981', borderRadius: '50%', boxShadow: '0 0 10px #10b981' },
+  historyCard: { background: '#1e293b', padding: '15px', borderRadius: '16px', borderLeft: '4px solid #4f46e5' }
 };
 
 export default UpdateIncident;

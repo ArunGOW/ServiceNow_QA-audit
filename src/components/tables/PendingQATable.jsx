@@ -91,9 +91,11 @@ const PendingQATable = ({ incidents, loading, refresh }) => {
     logger.info("Opening modal for incident:", incident);
 
     setSelectedIncident(incident);
+    const analystName = incident.assigned_analyst || incident.done_by || incident.agent || "";
     setFormData({
       ...incident,
       incident_sid: incident.sid,
+      assigned_analyst: analystName,
       qc_analyst: user?.full_name || "",
       audit_date: incident.audit_date || new Date().toISOString().split("T")[0],
     });
@@ -786,9 +788,10 @@ const PendingQATable = ({ incidents, loading, refresh }) => {
                 </div>
               </td>
               <td className="fw-medium text-dark" style={{ fontSize: '13px' }}>
-                {incident.assigned_analyst ? 
-                  incident.assigned_analyst.split(' ')[0] : "N/A"}
-              </td>
+  {incident.assigned_analyst 
+    ? formatDisplayName(incident.assigned_analyst.split(' ')[0]) 
+    : "N/A"}
+</td>
               <td className="text-muted" style={{ fontSize: '12px' }}>
                 {formatDate(incident.incident_date)}
               </td>
@@ -837,7 +840,7 @@ const PendingQATable = ({ incidents, loading, refresh }) => {
                         <Spinner animation="border" size="sm" />
                       ) : (
                         <Form.Select
-                          value={formData.assigned_analyst || ""}
+                          value={(formData.assigned_analyst || "").toLowerCase()}
                           onChange={(e) =>
                             setFormData({ ...formData, assigned_analyst: e.target.value })
                           }
@@ -845,7 +848,7 @@ const PendingQATable = ({ incidents, loading, refresh }) => {
                         >
                           <option value="">Select Agent</option>
                           {users.map((agent, index) => (
-                            <option key={index} value={agent.full_name}>
+                            <option key={index} value={(agent.full_name).toLowerCase()}>
                               {agent.full_name
                                 ? agent.full_name.charAt(0).toUpperCase() +
                                 agent.full_name.slice(1).toLowerCase()

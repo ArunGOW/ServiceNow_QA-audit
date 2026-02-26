@@ -1613,10 +1613,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Form, Button, Row, Col, Alert, Spinner, Modal } from 'react-bootstrap';
 import api from "../api/axois";
 import { useAuth } from "../context/AuthContext";
+import { useLocation,useNavigate } from 'react-router-dom';
 
 const UpdateIncident = () => {
   const { user: currentUser } = useAuth();
-  
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const analystRef = useRef(null);
   const statusRef = useRef(null);
 
@@ -1639,10 +1642,11 @@ const UpdateIncident = () => {
     status: '', 
     resolution_shared: '',
     user: '', 
-    done_by: currentUser?.full_name || '', 
+    done_by: '', 
     escalated_notes: '' 
   };
 
+  const fromPending = location.state?.fromPending || false;
   const [formData, setFormData] = useState(initialFormState);
 
   const statusOptions = [
@@ -1653,6 +1657,22 @@ const UpdateIncident = () => {
   ];
 
   const currentStatus = statusOptions.find(s => s.id === formData.status);
+
+  useEffect(() => {
+    if (location.state && location.state.incidentData) {
+      const data = location.state.incidentData;
+      console.log("Incoming Data:", data)
+      setFormData({
+        incident_number: data.incident_number || '',
+        short_description: data.short_description || '',
+        status: data.status || '',
+        resolution_shared: data.resolution_shared !== "N/A" ? data.resolution_shared : '',
+        user: data.user || '',
+ done_by: data.done_by || data.agent || currentUser?.full_name || '',
+        escalated_notes: data.escalated_notes !== "N/A" ? data.escalated_notes : ''
+      });
+    }
+  }, [location.state,currentUser]);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -1702,9 +1722,15 @@ const UpdateIncident = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    
     
     if (!formData.status || !formData.done_by || !formData.incident_number) {
       setFeedback({ type: 'danger', message: "Incident ID, Analyst, and Status are mandatory." });
+      return;
+    }
+    if (formData.status === 'resolved' && !formData.resolution_shared) {
+      setFeedback({ type: 'danger', message: "Resolution Summary is required for 'Resolved' status." });
       return;
     }
 
@@ -1713,7 +1739,11 @@ const UpdateIncident = () => {
 
     const payload = [{
       ...formData,
-      escalated_notes: formData.status === 'escalated' ? formData.escalated_notes : "N/A"
+      done_by: formData.done_by,
+      agent: formData.done_by,
+      analyst: formData.done_by,
+      escalated_notes: formData.status === 'escalated' ? formData.escalated_notes : "N/A",
+      resolution_shared: formData.status === 'resolved' ? formData.resolution_shared : "N/A"
     }];
 
     try {
@@ -1726,18 +1756,23 @@ const UpdateIncident = () => {
       const filteredHistory = recentIncidents.filter(inc => inc.incident_number !== formData.incident_number);
       setRecentIncidents([newEntry, ...filteredHistory].slice(0, 10));
       
-      setFeedback({ type: 'success', message: "Incident Synced Successfully!" });
+      setFeedback({ type: 'success', message: "Incident Synced Successfully!", icon: "bi-check-circle-fill" });
       setFormData(initialFormState);
 
       setTimeout(() => setFeedback(null), 4000);
+      if (fromPending) {
+  setTimeout(() => {
+    navigate(-1); 
+  }, 1500);
+}
 
     } catch (err) {
-      setFeedback({ type: 'danger', message: "Failed to Sync. Please check connection." });
+     setFeedback({ type: 'error', message: "Failed to Sync. Please check connection.", icon: "bi-exclamation-triangle-fill" });
     } finally {
       setLoading(false);
     }
   };
-
+  
   return (
     <div style={styles.pageWrapper}>
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
@@ -1771,7 +1806,22 @@ const UpdateIncident = () => {
          </div>
 
           <div className="d-flex justify-content-between align-items-center mb-3">
+           
             <h4 className="m-0 fw-bold">Update <span style={{ color: '#4f46e5' }}>Incident</span></h4>
+             <div className="d-flex align-items-center gap-3">
+          {/* ✅ ONLY SHOW BACK BUTTON IF REDIRECTED FROM PENDING */}
+          {fromPending && (
+            <Button 
+              variant="outline-secondary" 
+              size="sm" 
+              onClick={() => navigate(-1)} // Goes back one step in history
+              style={{ borderRadius: '8px', fontWeight: 'bold' }}
+            >
+              <i className="bi bi-arrow-left me-1"></i> Back to Pending List
+            </Button>
+          )}
+           
+        </div>
             {recentIncidents.length > 0 && (
               <Button variant="link" className="text-danger p-0 text-decoration-none small fw-bold" onClick={() => setShowClearModal(true)}>
                 <i className="bi bi-eraser me-1"></i> Clear Log
@@ -1810,7 +1860,7 @@ const UpdateIncident = () => {
               </Col>
 
               <Col md={6}>
-                <Form.Label style={styles.label}>Client Name *</Form.Label>
+                <Form.Label style={styles.label}>User Name *</Form.Label>
                 <Form.Control value={formData.user} placeholder="User Name" style={styles.input} onChange={(e) => setFormData({...formData, user: e.target.value})} required />
               </Col>
 
@@ -1840,20 +1890,42 @@ const UpdateIncident = () => {
                 </div>
               </Col>
 
-              <Col md={12}><Form.Label style={styles.label}>Description *</Form.Label><Form.Control value={formData.short_description} placeholder="Short summary" style={styles.input} onChange={(e) => setFormData({...formData, short_description: e.target.value})} required /></Col>
+              <Col md={12}><Form.Label style={styles.label}>Description </Form.Label><Form.Control value={formData.short_description} placeholder="Short summary" style={styles.input} onChange={(e) => setFormData({...formData, short_description: e.target.value})} /></Col>
               
               {/* ✅ SHOW ONLY WHEN ESCALATED IS SELECTED */}
               {formData.status === 'escalated' && (
                 <Col md={12}>
-                  <Form.Label style={{...styles.label, color: '#f43f5e'}}>Escalation Notes *</Form.Label>
-                  <Form.Control as="textarea" rows={1} placeholder="Why is this being escalated?" style={{...styles.textarea, borderColor: '#fecaca'}} value={formData.escalated_notes} onChange={(e) => setFormData({...formData, escalated_notes: e.target.value})} required />
+                  <Form.Label style={{...styles.label, color: '#f43f5e'}}>Escalation Notes</Form.Label>
+                  <Form.Control as="textarea" rows={1} placeholder="Why is this being escalated?" style={{...styles.textarea, borderColor: '#fecaca'}} value={formData.escalated_notes} onChange={(e) => setFormData({...formData, escalated_notes: e.target.value})}/>
                 </Col>
               )}
 
-              <Col md={12}><Form.Label style={styles.label}>Resolution Summary *</Form.Label><Form.Control as="textarea" rows={1} value={formData.resolution_shared} style={styles.input} onChange={(e) => setFormData({...formData, resolution_shared: e.target.value})} required /></Col>
-            </Row>
+{formData.status === 'resolved' && (
+        <Col md={12}>
+          <Form.Label style={{...styles.label, color: '#10b981'}}>Resolution Summary </Form.Label>
+          <Form.Control 
+            as="textarea" 
+            rows={1} 
+            placeholder="Describe the fix..." 
+            value={formData.resolution_shared} 
+            style={{...styles.input, borderColor: '#a7f3d0'}} 
+            onChange={(e) => setFormData({...formData, resolution_shared: e.target.value})} 
+           
+          />
+        </Col>
+      )}            </Row>
             
-            {feedback && <Alert variant={feedback.type} className="mt-3 py-2 small border-0 shadow-sm">{feedback.message}</Alert>}
+            {feedback && (
+  <div style={{
+    ...styles.inlineToast,
+    backgroundColor: feedback.type === 'success' ? '#ecfdf5' : '#fff1f2',
+    color: feedback.type === 'success' ? '#059669' : '#e11d48',
+    border: `1px solid ${feedback.type === 'success' ? '#10b981' : '#fb7185'}`
+  }} className="mt-3 d-flex align-items-center gap-2">
+    <i className={`bi ${feedback.icon}`}></i>
+    <span style={{ fontWeight: '600', fontSize: '13px' }}>{feedback.message}</span>
+  </div>
+)}
             
             <div className="d-flex gap-2 mt-4">
                <Button type="button" variant="light" onClick={handleReset} style={{ borderRadius: '12px', fontWeight: '700', flex: 1 }}>
@@ -1919,7 +1991,12 @@ const styles = {
   previewSection: { backgroundColor: '#0f172a', padding: '25px', overflowY: 'auto' },
   previewHeader: { fontSize: '9px', fontWeight: '900', color: '#e1e7ef', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '8px' },
   liveDot: { width: '6px', height: '6px', background: '#10b981', borderRadius: '50%' },
-  historyCard: { position: 'relative', background: '#1e293b', padding: '12px', borderRadius: '12px', marginBottom: '10px', borderLeft: '3px solid #4f46e5' }
+  historyCard: { position: 'relative', background: '#1e293b', padding: '12px', borderRadius: '12px', marginBottom: '10px', borderLeft: '3px solid #4f46e5' },inlineToast: {
+    padding: '12px 16px',
+    borderRadius: '12px',
+    boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+    animation: 'slideUp 0.3s ease-out',  
+  },
 };
 
 export default UpdateIncident;
